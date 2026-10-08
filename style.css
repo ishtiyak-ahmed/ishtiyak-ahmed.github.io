@@ -156,10 +156,16 @@ section p {
   color: var(--muted);
 }
 
+.coursework {
+  margin-top: 14px;
+  color: var(--text);
+}
+
 .external-links {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 10px;
+  margin-top: 14px;
 }
 
 @media (max-width: 560px) {
