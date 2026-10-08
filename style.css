@@ -1,0 +1,75 @@
+:root {
+  color: #222;
+  background: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  text-align: center;
+}
+
+header {
+  margin-bottom: 48px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+h2 {
+  margin-top: 42px;
+  margin-bottom: 12px;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 8px auto 18px;
+  max-width: 520px;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+a {
+  color: #0645ad;
+}
+
+section p {
+  margin: 0 auto;
+  max-width: 620px;
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-list li {
+  margin: 16px 0;
+}
+
+.project-list span {
+  display: block;
+  font-size: 0.95rem;
+  color: #666;
+}
