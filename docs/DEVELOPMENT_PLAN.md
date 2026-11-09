@@ -6,7 +6,7 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 | --- | --- | --- | --- |
 | 0 — Project Initialization | Vite/React/TypeScript setup, theme tokens, minimal message, documentation, local rebuild branch | Existing repository history | Install, typecheck, lint, build, and render the placeholder; verify root asset base and unchanged remote |
 | 1 — Desktop Foundation | Desktop shell, exact introduction, photo placeholder, Currently, horizontal Quick Links, menu/dock spacing | 0 | Verify 1440px/1920px and narrow layouts, small widget proportions, link destinations and disabled Resume, keyboard labels, and no overflow |
-| 2 — Dock & Menu Bar | Six navigation icons, OS/application labels, live clock | 1 | Keyboard access, labels, clock updates and timer cleanup; use callbacks until the window manager exists |
+| 2 — Dock & Menu Bar | Six ordered application icons, typed registry, launch boundary, fixed menu with local live clock | 1 | Verify all five requested viewport sizes, hover/focus labels and Escape, Home focus, guarded unavailable apps, minute updates, no fake running indicators, no overflow or content overlap |
 | 3 — Window Manager | Shared chrome and central open/focus/close/minimize/restore behavior; geometry as needed | 1–2 | Multiple windows, focus/stack order, restore, bounds, keyboard access; connect dock actions |
 | 4 — Education & Coffee | Compact education and coffee-themed contact applications | 3 | Correct data, readable content, valid contact links, full window lifecycle |
 | 5 — Technical Skills | Categorized skills application | 3; reuse patterns from 4 | Correct grouping, responsive content, window integration |
@@ -19,4 +19,4 @@ Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both de
 
 The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 9; do not copy old deployment behavior into the rebuild.
 
-Phases 0 and 1 are implemented. Phase 0 has a local checkpoint commit; Phase 1 remains uncommitted for visual review. The real photograph and a current Resume file are pending. Phase 2 has not started.
+Phases 0–2 are implemented. Phases 0 and 1 have local checkpoint commits; Phase 2 remains uncommitted for review. The real photograph and a current Resume file are pending. Only Home has a supported dock action; the five window applications are explicitly unavailable. Phase 3 has not started.

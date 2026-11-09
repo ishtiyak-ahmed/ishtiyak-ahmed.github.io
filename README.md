@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 1 adds a viewport-based desktop homepage with a centered introduction and compact personal widgets. The menu bar, dock, window manager, and portfolio applications are planned, not implemented.
+A macOS-inspired personal portfolio built incrementally. Phase 2 adds a fixed menu bar, live local clock, and six-icon dock to the viewport-based desktop homepage. The window manager and portfolio applications remain planned.
 
 ## Stack
 
@@ -32,7 +32,8 @@ src/
   main.tsx               React entry point
   app/App.tsx            Desktop composition; future OS controller
   components/
-    desktop/widgets/     Desktop shell, hero, photo, Currently, Quick Links
+    desktop/             Desktop, hero, Dock, DockIcon, MenuBar, CSS
+      widgets/           Photo, Currently, Quick Links
     windows/             Reserved for shared window chrome
     ui/                  Small local brand icon SVGs
   apps/
@@ -41,7 +42,7 @@ src/
     education/           Future education application
     skills/              Future categorized skills application
     coffee/              Future coffee-themed contact application
-  data/                  Typed desktop content and destinations
+  data/                  Typed desktop content, destinations, application registry
   hooks/                 Future shared behavior
   styles/global.css      Tailwind import, tokens, global base styles
   assets/{icons,images}/  Future bundled assets
@@ -71,7 +72,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phase 0 is checkpointed locally; Phase 1 changes remain uncommitted for visual review. Publishing belongs to Phase 9.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0 and 1 are checkpointed locally; Phase 2 changes remain uncommitted for review. Publishing belongs to Phase 9.
 
 Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
 
@@ -87,6 +88,14 @@ Edit `src/data/desktop.ts` to update the introduction, Currently copy, photo, or
 
 Quick Links use the LinkedIn, GitHub, and email destinations from the previous portfolio. Resume is deliberately disabled (`href: null`) until a current file is supplied. Place the file in `public/` and set its root-relative URL when ready. Links provide hover and keyboard-focus labels; unavailable actions have no destination or click behavior.
 
-`components/desktop/desktop.css` controls the composition. The photo and Currently widgets align at the upper left, with a 48px Quick Links strip directly below the photo. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions. Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
+`components/desktop/desktop.css` controls the composition. The photo and Currently widgets align at the upper left, with a 48px Quick Links strip directly below the photo. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions (96px dock region on narrow screens). Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
 
 The [Elena Gonci reference](https://elenagonci.com/) was inspected at 1440px desktop width for small widget proportions, central typography, negative space, and dock clearance. Only composition informed the layout; no source or graphic assets were copied.
+
+## Dock and menu bar
+
+The dock order and display names come from `src/data/apps.ts`: Home, Beyond the Data, Education, Projects, Technical Skills, and Let's Grab a Coffee. Each icon uses a consistent rounded-square treatment with Lucide artwork; registry icon configuration can be replaced with a custom image later.
+
+Home returns focus to the desktop. The other five buttons are explicitly not yet available: labels appear on hover/focus, and activation does not open anything. No running indicators are shown. The dock accepts a shared launch callback and real running IDs for the future window manager. Labels dismiss with Escape; reduced motion disables magnification. Touch targets remain at least 44px wide even at 320px.
+
+The fixed menu shows **Ishtiyak OS | Home** and the visitor's local date/time. The clock updates once per minute and resyncs when the page becomes visible. Only the clock rerenders for time changes. No fake system indicators or nonfunctional menus are included. No dependencies were added in Phase 2.
