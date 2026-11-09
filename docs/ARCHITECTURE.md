@@ -1,10 +1,10 @@
 # Architecture
 
-## Implemented through Phase 5
+## Implemented through Phase 6
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain the Phase 1 layout and typed configuration in `data/desktop.ts`. No full-page navigation occurs.
 
-Vite integrates React and Tailwind with `/` as the asset base. `styles/global.css` defines semantic theme tokens and the shared menu/dock geometry and layer variables. System sans-serif and monospace stacks avoid font downloads. The real photograph and current Resume file are still pending.
+Vite integrates React and Tailwind with `/` as the asset base. `styles/global.css` defines semantic theme tokens and the shared menu/dock geometry and layer variables. System sans-serif and monospace stacks avoid font downloads. The real photograph and official university logo remain pending; the supplied résumé is now integrated.
 
 ## Application registry
 
@@ -38,13 +38,13 @@ DockIcon still supports Lucide glyph compositions or a replaceable custom asset.
 
 ## Application content and shared data
 
-`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, and Technical Skills to their real application components; the other three window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
+`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, Technical Skills, and Experience to their real application components; the other two window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
 
 `data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is confirmed as May 2029; the logo is a generic academic placeholder until a verified official institutional mark is supplied. The unknown-date fallback remains, but no historical alternative date overrides the confirmed value.
 
 `data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email and safe external profiles, an unavailable Resume row, and an enabled Phone copy button with a Call link. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
 
-Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. The confirmed phone is 437-606-3417; clipboard success feedback is browser-verified and failure paths are unit-tested. The current résumé PDF remains unavailable, so Resume alone stays disabled. External links announce new-tab behavior and use `noopener noreferrer`.
+Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. The confirmed phone is 437-606-3417; clipboard success feedback is browser-verified and failure paths are unit-tested. The supplied résumé PDF is copied unchanged into public/documents, and both Resume actions are enabled. External links announce new-tab behavior and use `noopener noreferrer`.
 
 Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` already supply education/contact facts and will later supply project/skill facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
 
@@ -62,8 +62,26 @@ SkillsApp renders small button tiles with names always visible. Pointer hover, f
 
 `resolveSkillWork` matches optional references to a future verified catalog and rejects placeholder destination apps using the central registry. SkillsApp also requires a resource-selection callback before rendering related actions; it calls shared `openApp` before selection. Current mappings and catalog are empty, so there are no speculative or disabled project/experience links.
 
-Experience is registered as the `experience` ID between Education and Projects. Its briefcase icon, presets, placeholder message, active menu name, and running indicator all use existing infrastructure. The future Phase 6 split view can replace its placeholder in ApplicationContent without changing the reducer or AppWindow. No employers or accomplishments are populated.
+Experience is registered as the `experience` ID between Education and Projects. Its briefcase icon, presets, active menu name, and running indicator all use existing infrastructure. Phase 6 replaces only its placeholder content with the split-view application. Only the confirmed E. Aferi metadata is populated; accomplishments remain unset.
 
-## Current content decisions
+## Experience selection and compact navigation
 
-Graduation and phone are confirmed. Official university artwork and the personal photograph remain pending. `Ishtiyak_Ahmed(1).pdf` was not found in the workspace or accessible Codex attachment directory. Supply the actual current PDF unchanged as `public/documents/Ishtiyak_Ahmed_Resume.pdf`, then configure `/documents/Ishtiyak_Ahmed_Resume.pdf` once in `data/contact.ts`; both Resume actions already support safe new-tab behavior. Tests reject an enabled résumé path without a real public PDF. Final skill descriptions and work mappings await content review.
+`data/experience.ts` defines stable role IDs rather than employer-based keys, so multiple positions at one employer are supported. Dates are YYYY-MM values, sorted by newest start date first and formatted in UTC to avoid visitor-timezone shifts. Summary, accomplishments, technologies (skill IDs), relatedProjectIds, and externalLinks are optional. HTTPS is required for displayed external links; unsupported project links are not rendered.
+
+`apps/experience/experienceSelection.ts` contains the small local selection reducer. First mount selects the newest available entry while keeping the compact view on Work History. Buttons update the selected ID/details in place; invalid IDs leave selection unchanged. Empty data displays a restrained empty state. Production data contains exactly one verified E. Aferi role and no fabricated detail prose.
+
+ExperienceApp fills the existing content area. CSS container queries use the window width, not the viewport, to switch between a 32% history / 68% detail split and list-first compact navigation below 540px. Panels scroll independently. Switching roles resets the detail scroll; minimize, restore, and expansion do not reset local state or scroll. Back preserves selection and returns focus to the selected button. Compact selection focuses the role heading. There are no duplicated window controls or new page routes.
+
+## Future related-resource requests
+
+The existing `openApp` API now accepts an optional resource ID. A window instance may carry `{ resourceId, requestId }`; repeated explicit requests receive a new request ID, while normal dock restore keeps the existing request object. WindowManager passes it through ApplicationContent to ExperienceApp, which selects only IDs present in its own data. Closing removes the request with the window. Existing AppWindow controls and lifecycle policies are unchanged.
+
+Future Skills integrations can call `openApp('experience', roleId)`. `resolveSkillWork` now also validates Experience references against actual role IDs, while continuing to reject placeholder Finder destinations. No production mappings or Experience technologies are invented during this phase.
+
+## Current content and verification boundaries
+
+The confirmed role is E. Aferi / Research and Project Support Intern / January–April 2026 / Toronto, Ontario. Summary, accomplishments, technologies, project references, and external links await approval. Official university artwork and the personal photograph remain pending.
+
+The user-supplied `Ishtiyak_Ahmed copy.pdf` is copied byte-for-byte to `public/documents/Ishtiyak_Ahmed_Resume.pdf`; the canonical contact configuration enables both safe new-tab Resume actions. The source and deployed asset hashes match. No résumé content is modified or converted into experience claims.
+
+Unit fixtures and a dedicated Vite browser harness live under tests, outside the production import graph. They cover sorting, repeated employers, switching, long content/list scroll, empty states, compact focus, lifecycle preservation/reset, and linked-role requests. Production builds must not contain the `TEST FIXTURE` marker or test HTML. No new dependencies are required.

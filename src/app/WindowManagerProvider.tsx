@@ -10,7 +10,7 @@ export function WindowManagerProvider({ children }: { children: ReactNode }) {
     <WindowManagerContext value={{
       state,
       activeAppId: activeApplicationId(state),
-      openApp: (appId) => dispatch({ type: 'open', appId }),
+      openApp: (appId, resourceId) => dispatch({ type: 'open', appId, resourceId }),
       closeApp: (appId) => dispatch({ type: 'close', appId }),
       minimizeApp: (appId) => dispatch({ type: 'minimize', appId }),
       restoreApp: (appId) => dispatch({ type: 'restore', appId }),

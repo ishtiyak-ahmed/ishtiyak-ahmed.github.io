@@ -10,7 +10,7 @@ test('The seven dock applications retain their exact order and Experience window
   assert.equal(applications.experience.name, 'Experience')
   assert.deepEqual(applications.experience.window.normal, { width: 720, height: 480 })
   assert.deepEqual(applications.experience.window.expanded, { width: 1000, height: 700 })
-  assert.equal(applications.experience.window.placeholder.message, 'Professional experience application — implementation scheduled for Phase 6.')
+  assert.equal('placeholder' in applications.experience.window, false)
 })
 
 test('Toolkit contains exactly the supplied skills in their four categories', () => {
@@ -39,7 +39,15 @@ test('All local brand assets exist, and no skill invents a related destination',
   }
 })
 
-test('Related work is suppressed while Finder and Experience are placeholders', () => {
+test('Related work rejects placeholder Finder and unknown Experience IDs', () => {
   const skill = { ...skills[0], relatedWork: [{ applicationId: 'experience' as const, resourceId: 'test-role' }, { applicationId: 'projects' as const, resourceId: 'test-project' }] }
   assert.deepEqual(resolveSkillWork(skill, [{ applicationId: 'experience', resourceId: 'test-role', label: 'Test role' }, { applicationId: 'projects', resourceId: 'test-project', label: 'Test project' }]), [])
+})
+
+test('A verified Experience ID can resolve without inventing production skill mappings', async () => {
+  const { experiences } = await import('../src/data/experience.ts')
+  const destination = { applicationId: 'experience' as const, resourceId: experiences[0].id, label: experiences[0].employer }
+  const skill = { ...skills[0], relatedWork: [destination] }
+  assert.deepEqual(resolveSkillWork(skill, [destination]), [destination])
+  assert.ok(skills.every((item) => !item.relatedWork?.length))
 })

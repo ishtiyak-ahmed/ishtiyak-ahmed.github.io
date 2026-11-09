@@ -1,11 +1,14 @@
 import { applications } from '../data/apps.ts'
 import type { ApplicationId, WindowApplicationId } from '../data/apps.ts'
 
+export interface ResourceRequest { resourceId: string; requestId: number }
+
 export interface WindowInstance {
   appId: WindowApplicationId
   instanceId: number
   minimized: boolean
   expanded: boolean
+  resourceRequest?: ResourceRequest
 }
 
 export interface WindowState {
@@ -16,7 +19,7 @@ export interface WindowState {
 }
 
 export type WindowAction =
-  | { type: 'open'; appId: ApplicationId }
+  | { type: 'open'; appId: ApplicationId; resourceId?: string }
   | { type: 'close' | 'minimize' | 'restore' | 'focus' | 'toggleExpand'; appId: WindowApplicationId }
   | { type: 'showDesktop' }
 
@@ -38,8 +41,9 @@ export function windowReducer(state: WindowState, action: WindowAction): WindowS
   if (action.type === 'open') {
     return {
       ...state,
-      windows: [...remaining, current ? { ...current, minimized: false } : {
-        appId, instanceId: state.nextInstanceId, minimized: false, expanded: false,
+      windows: [...remaining, {
+        ...(current ? { ...current, minimized: false } : { appId, instanceId: state.nextInstanceId, minimized: false, expanded: false }),
+        ...(action.resourceId ? { resourceRequest: { resourceId: action.resourceId, requestId: state.focusRequest + 1 } } : {}),
       }],
       nextInstanceId: state.nextInstanceId + (current ? 0 : 1),
       focusRequest: state.focusRequest + 1,

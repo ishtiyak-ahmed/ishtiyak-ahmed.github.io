@@ -42,7 +42,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'graduation', tone: 'academic' },
   },
   experience: {
-    window: { normal: { width: 720, height: 480 }, expanded: { width: 1000, height: 700 }, placeholder: { message: 'Professional experience application — implementation scheduled for Phase 6.' } },
+    window: { normal: { width: 720, height: 480 }, expanded: { width: 1000, height: 700 } },
     id: 'experience', name: 'Experience', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'briefcase', tone: 'slate' },
   },

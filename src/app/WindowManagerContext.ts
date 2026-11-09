@@ -5,7 +5,7 @@ import type { WindowState } from './windowState'
 export interface WindowManagerApi {
   state: WindowState
   activeAppId: ApplicationId
-  openApp: (id: ApplicationId) => void
+  openApp: (id: ApplicationId, resourceId?: string) => void
   closeApp: (id: WindowApplicationId) => void
   minimizeApp: (id: WindowApplicationId) => void
   restoreApp: (id: WindowApplicationId) => void

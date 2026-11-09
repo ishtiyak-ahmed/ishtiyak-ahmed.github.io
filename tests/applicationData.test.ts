@@ -34,7 +34,7 @@ test('Contact actions use valid verified destinations and keep missing details u
     assert.equal(new URL(link.href!).protocol, 'https:')
     assert.equal(link.newTab, true)
   }
-  assert.equal(contactLinks.find((link) => link.id === 'resume')?.href, null)
+  assert.equal(contactLinks.find((link) => link.id === 'resume')?.href, '/documents/Ishtiyak_Ahmed_Resume.pdf')
   assert.equal(contactDetails.phone?.display, '437-606-3417')
   assert.equal(contactDetails.phone?.copyValue, '437-606-3417')
   assert.equal(contactDetails.phone?.tel, '+14376063417')

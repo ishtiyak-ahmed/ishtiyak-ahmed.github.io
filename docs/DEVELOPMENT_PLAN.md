@@ -20,7 +20,7 @@ Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both de
 
 The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 10; do not copy old deployment behavior into the rebuild.
 
-Phases 0–5 are implemented. Phases 0–4 have local checkpoint commits; Phase 5 remains uncommitted for review. Phase 6 has not started.
+Phases 0–6 are implemented. Phases 0–5 have local checkpoint commits; Phase 6 remains uncommitted for review. Phase 7 has not started.
 
 ## Phase 3 verification
 
@@ -41,8 +41,20 @@ Phases 0–5 are implemented. Phases 0–4 have local checkpoint commits; Phase 
 
 The toolkit contains only the 18 supplied skills. Nine locally bundled Devicon SVGs and neutral Lucide symbols provide icons without adding a dependency. Descriptions support hover, focus, and click/tap; Escape and outside interaction dismiss them. Related work requires verified IDs, an implemented destination, and a resource-selection handler; no mappings are fabricated.
 
-Experience has a real seventh dock action and the shared single-instance lifecycle, but only the approved Phase 6 placeholder. Its full split view is not part of Phase 5. Both Technical Skills size states and the seven-icon dock are checked at 1920×1080, 1440×900, 1280×800, 390×844, and 320×640, with at least 44px dock targets and no horizontal overflow. Experience open/expand/minimize/restore/close/reopen, Home, active names, and running indicators are covered by lifecycle tests and browser checks.
+At the Phase 5 checkpoint, Experience had a real seventh dock action and shared single-instance lifecycle, with only the approved Phase 6 placeholder. Its full split view is not part of Phase 5. Both Technical Skills size states and the seven-icon dock are checked at 1920×1080, 1440×900, 1280×800, 390×844, and 320×640, with at least 44px dock targets and no horizontal overflow. Experience open/expand/minimize/restore/close/reopen, Home, active names, and running indicators are covered by lifecycle tests and browser checks.
 
-The confirmed May 2029 graduation and 437-606-3417 phone come from centralized configuration. Phone has copy feedback and a `tel:` action and remains absent from Quick Links. Clipboard denial/unsupported cases remain automated tests. Resume stays disabled because the supplied PDF could not be found. Place the real file unchanged at `public/documents/Ishtiyak_Ahmed_Resume.pdf` and configure its root-relative URL; do not generate a substitute.
+The confirmed May 2029 graduation and 437-606-3417 phone come from centralized configuration. Phone has copy feedback and a `tel:` action and remains absent from Quick Links. Clipboard denial/unsupported cases remain automated tests. At that checkpoint, Resume remained disabled because the PDF was unavailable. Phase 6 integrates the subsequently supplied original PDF without modifying it.
 
 Before the next content review: supply the official university logo and personal photograph; review conservative skill descriptions and add only verified project/experience mappings. Phase 6 must use confirmed work-history records.
+
+## Phase 6 verification and pending content
+
+Experience now renders a Mail-inspired split view in the existing window, with stable role IDs, newest-first sorting, optional content, initial selection, independent panel scrolling, and list/detail/Back navigation in narrow windows. Production displays only the confirmed E. Aferi role metadata; no summary or accomplishments are fabricated.
+
+The 30 automated cases retain the original lifecycle coverage and add selection, multiple fixture roles at one employer, defaulting, sorting, missing optional content, empty data, date formatting, link filtering, valid resource IDs, and repeated role-selection requests. An isolated browser harness checks actual rendering, switching, independent scroll, selection/scroll preservation under minimize and expansion, reset after close, compact keyboard focus, and empty states. Test fixtures and harness HTML are excluded from production builds.
+
+Production checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640 at normal/expanded sizes. No horizontal overflow or menu/dock obstruction is allowed. Previous Education, Coffee, Skills, Home, focus/stacking, and running indicators remain regression checks.
+
+The supplied `Ishtiyak_Ahmed copy.pdf` is found and copied unchanged into the shared public résumé path. Both résumé links are enabled and open a new tab; verify the production PDF matches the source. The original root file is not changed.
+
+Pending content review: role summary and accomplishments, verified technologies/project mappings, official university logo, personal photograph, and final skill descriptions. Proceed to Phase 7 only with a new prompt.

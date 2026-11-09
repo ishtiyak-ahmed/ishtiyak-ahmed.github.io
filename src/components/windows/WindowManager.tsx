@@ -15,7 +15,7 @@ export function WindowManager() {
         {state.windows.toSorted((a, b) => a.instanceId - b.instanceId).map((window) => (
           <AppWindow key={window.instanceId} window={window}
             layer={state.windows.findIndex((entry) => entry.appId === window.appId) + 1}>
-            <ApplicationContent appId={window.appId} />
+            <ApplicationContent appId={window.appId} resourceRequest={window.resourceRequest} />
           </AppWindow>
         ))}
       </AnimatePresence>

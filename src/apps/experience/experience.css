@@ -1,0 +1,41 @@
+/* Content fills the existing fixed-size AppWindow; each panel owns its scroll. */
+.experience-app { height: 100%; min-height: 0; container: experience / inline-size; }
+.experience-layout { height: 100%; display: grid; grid-template-columns: minmax(200px, 32%) minmax(0, 1fr); }
+.experience-history { min-height: 0; overflow: auto; padding: 22px 12px; background: #28282d; border-right: 1px solid rgb(255 255 255 / 6%); overscroll-behavior: contain; }
+.experience-history h2 { margin: 0 10px 15px; font-size: 10px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--color-secondary); }
+.experience-history ul { margin: 0; padding: 0; list-style: none; }
+.experience-history li + li { margin-top: 5px; }
+.experience-entry { display: flex; flex-direction: column; gap: 5px; width: 100%; border: 1px solid transparent; border-radius: 9px; padding: 12px 10px; text-align: left; color: var(--color-primary); font: inherit; background: transparent; cursor: pointer; }
+.experience-entry:hover { background: rgb(255 255 255 / 3%); }
+.experience-entry[aria-current="true"] { background: rgb(111 143 166 / 15%); border-color: rgb(135 160 180 / 15%); }
+.experience-entry__employer { font-size: 13px; font-weight: 600; line-height: 1.4; }
+.experience-entry__role { font-size: 11px; color: var(--color-secondary); line-height: 1.5; }
+.experience-entry__dates { font-size: 10px; color: var(--color-secondary); line-height: 1.5; margin-top: 3px; }
+.experience-detail { min-height: 0; min-width: 0; overflow: auto; padding: 30px; overscroll-behavior: contain; }
+.experience-detail h2 { margin: 0; max-width: 490px; font-size: 25px; font-weight: 500; line-height: 1.25; letter-spacing: -0.035em; }
+.experience-detail__employer { font-size: 15px; margin: 12px 0 18px; }
+.experience-detail__dates { font-size: 12px; margin: 0 0 9px; color: var(--color-secondary); line-height: 1.6; }
+.experience-detail__location { display: flex; align-items: center; gap: 6px; font-size: 11px; margin: 0; color: var(--color-secondary); line-height: 1.6; }
+.experience-detail__pending { margin: 28px 0 0; border-top: 1px solid rgb(255 255 255 / 6%); padding-top: 20px; font-size: 12px; line-height: 1.7; color: var(--color-secondary); }
+.experience-detail__summary, .experience-detail__accomplishments { margin: 25px 0 0; font-size: 13px; line-height: 1.8; }
+.experience-detail h3 { font-size: 11px; font-weight: 500; color: var(--color-secondary); }
+.experience-detail__accomplishments ul { padding-left: 18px; }
+.experience-detail__accomplishments li + li { margin-top: 8px; }
+.experience-detail__skills ul { display: flex; gap: 8px; flex-wrap: wrap; list-style: none; padding: 0; font-size: 11px; color: var(--color-secondary); }
+.experience-detail__links { padding: 0; list-style: none; font-size: 12px; }
+.experience-detail__links a { display: inline-flex; gap: 6px; align-items: center; color: var(--color-finder); padding: 6px 0; }
+.experience-back { display: none; align-items: center; gap: 7px; min-height: 36px; padding: 6px 0; margin: 0 0 20px; border: 0; border-radius: 4px; background: transparent; color: var(--color-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+.experience-entry:focus-visible, .experience-back:focus-visible, .experience-detail:focus-visible, .experience-detail h2:focus-visible, .experience-detail__links a:focus-visible { outline: 2px solid var(--color-finder); outline-offset: -2px; }
+.experience-history__empty, .experience-detail__empty p { font-size: 12px; line-height: 1.7; color: var(--color-secondary); }
+@container experience (max-width: 540px) {
+  .experience-layout { grid-template-columns: minmax(0, 1fr); }
+  .experience-history { padding: 20px 14px; border-right: 0; }
+  .experience-detail { padding: 18px 22px 28px; }
+  .experience-detail h2 { font-size: 24px; }
+  .experience-back { display: flex; }
+  .experience-app[data-view="list"] .experience-detail { display: none; }
+  .experience-app[data-view="details"] .experience-history { display: none; }
+  .experience-entry { padding: 15px 12px; }
+  .experience-entry__role { font-size: 12px; }
+  .experience-entry__dates { font-size: 11px; }
+}

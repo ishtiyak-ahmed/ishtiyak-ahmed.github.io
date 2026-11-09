@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 5 adds the categorized Technical Skills toolkit, a seventh Experience dock application, and confirmed Education/Coffee details. Experience remains a development placeholder; its full content is planned for Phase 6.
+A macOS-inspired personal portfolio built incrementally. Phase 6 adds a responsive, Mail-inspired Experience application and integrates the supplied résumé. Experience currently shows one confirmed role; detailed wording remains pending review.
 
 ## Stack
 
@@ -41,6 +41,7 @@ src/
     finder/              Future project explorer
     jarvis/              Future deterministic portfolio terminal
     education/           Education information panel
+    experience/          Split-view work history and local selection
     skills/              Categorized toolkit and accessible skill descriptions
     coffee/              Coffee-themed contact application
   data/                  Desktop, education, contacts, skills, application registry
@@ -75,7 +76,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–4 are checkpointed locally; Phase 5 changes remain uncommitted for review. Publishing belongs to Phase 10.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–5 are checkpointed locally; Phase 6 changes remain uncommitted for review. Publishing belongs to Phase 10.
 
 Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
 
@@ -89,7 +90,7 @@ At initialization, `npm audit` reported 10 moderate development-tooling findings
 
 Edit `src/data/desktop.ts` to update the introduction, Currently copy, or photo. Quick Links derive from canonical contact configuration in `src/data/contact.ts`. Photo is a neutral square placeholder: import a real asset, set `photo.src`, supply descriptive `photo.alt`, and adjust `objectPosition` for the crop. No generated portrait is used.
 
-Quick Links use the LinkedIn, GitHub, and email destinations from the previous portfolio. Resume is deliberately disabled (`href: null`) until a current file is supplied. Place the current file at `public/documents/Ishtiyak_Ahmed_Resume.pdf` and set `contactDetails.resume` to `/documents/Ishtiyak_Ahmed_Resume.pdf` when ready; both Quick Links and Coffee will use it. Links provide hover and keyboard-focus labels; unavailable actions have no destination or click behavior.
+Quick Links and Coffee share the verified email, LinkedIn, GitHub, and résumé destinations in `src/data/contact.ts`. The supplied `Ishtiyak_Ahmed copy.pdf` is copied byte-for-byte to `public/documents/Ishtiyak_Ahmed_Resume.pdf`. Both Resume actions open `/documents/Ishtiyak_Ahmed_Resume.pdf` in a new tab with `noopener noreferrer`; Vite includes that unchanged file in the production build. The original supplied file remains untouched.
 
 `components/desktop/desktop.css` controls the composition. The photo and Currently widgets align at the upper left, with a 48px Quick Links strip directly below the photo. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions (96px dock region on narrow screens). Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
 
@@ -109,15 +110,15 @@ The React reducer/context lives in `src/app/`, with `useWindowManager` exposing 
 
 Red closes and resets content on the next launch. Yellow hides the window without unmounting its content. Green toggles predefined normal/expanded sizes for Projects, Beyond the Data, Technical Skills, and Experience; it is disabled for Education and Let's Grab a Coffee. Expanded state survives minimizing and Home. Windows are centered within the usable area between the menu bar and dock, constrained to the viewport, and scroll internally as needed. There is no dragging, manual resizing, browser fullscreen, or focus trap.
 
-Education, Let's Grab a Coffee, and Technical Skills render real content through `apps/ApplicationContent.tsx`. Experience, Projects, and Beyond the Data retain neutral development placeholders. Session/window state resets on page reload.
+Education, Let's Grab a Coffee, Technical Skills, and Experience render real content through `apps/ApplicationContent.tsx`. Projects and Beyond the Data retain neutral development placeholders. Session/window state resets on page reload.
 
-`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 21 lifecycle, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 30 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
 
 ## Education and Coffee configuration
 
 `src/data/education.ts` contains University of Toronto, Mississauga Campus, the Applied Statistics major, Computer Science and Geospatial Data Science minors, graduation, and logo fields. The confirmed `expectedGraduation` is **May 2029**; the fallback remains available for a future unknown value. `logo: null` uses a clearly labeled generic academic icon, not an institutional mark. Supply a verified official logo asset with descriptive alt text when available.
 
-`src/data/contact.ts` is the single source of truth for email, LinkedIn, GitHub, résumé, and phone. It derives the four homepage Quick Links and Coffee's ordered links. Email uses `mailto:`; LinkedIn and GitHub open new tabs with `noopener noreferrer` and accessible new-tab labels. Coffee displays the confirmed public phone **437-606-3417**, with a copy action and `tel:+14376063417` Call link. Phone stays out of Quick Links. Resume remains disabled because the supplied filename `Ishtiyak_Ahmed(1).pdf` was not found in this workspace or the accessible Codex attachment directory. Place the unmodified current PDF at `public/documents/Ishtiyak_Ahmed_Resume.pdf`, then set the single `contactDetails.resume` field to `/documents/Ishtiyak_Ahmed_Resume.pdf`. Both Resume actions will open it in a new tab; Vite copies public documents into the production build.
+`src/data/contact.ts` is the single source of truth for email, LinkedIn, GitHub, résumé, and phone. It derives the four homepage Quick Links and Coffee's ordered links. Email uses `mailto:`; LinkedIn and GitHub open new tabs with `noopener noreferrer` and accessible new-tab labels. Coffee displays the confirmed public phone **437-606-3417**, with a copy action and `tel:+14376063417` Call link. Phone stays out of Quick Links. Resume is now enabled from the supplied, unchanged PDF at `/documents/Ishtiyak_Ahmed_Resume.pdf`; no résumé text was rewritten or reused as experience prose.
 
 The phone copy button uses the browser Clipboard API with polite success/error feedback. Supported writes, rejection, unsupported access, and missing values are covered by tests. The browser success path displays “Phone number copied.” The two compact applications retain their existing presets and controls.
 
@@ -129,8 +130,14 @@ Descriptions open on hover, keyboard focus, and tap/click. Click pins a descript
 
 Nine local Devicon SVGs supply recognizable product/language identities. Neutral Lucide symbols cover the other tools and practices. Source revision, URLs, licensing, and fallback choices are documented in `src/assets/icons/skills/README.md`; no icon package was added.
 
-Related work has no invented mappings. `resolveSkillWork` only exposes verified catalog entries for implemented destination applications. A future resource-selection callback is also required; supported references use the shared `openApp` API. Placeholder Finder/Experience destinations currently produce no links.
+Related work has no invented mappings. `resolveSkillWork` only exposes verified catalog entries for implemented destination applications. A future resource-selection callback is also required; supported references use the shared `openApp` API. Finder remains unsupported. Experience IDs must match the real experience configuration; no production skill mappings have been invented.
 
-Experience uses the same registry/window lifecycle, a slate briefcase icon, 720×480 normal and 1000×700 expanded presets, and only the Phase 6 development message. The seven-icon dock keeps 44px targets at 320px with tighter spacing. There is no Experience split view or work-history content yet.
+Experience uses the same registry/window lifecycle, slate briefcase icon, and 720×480 normal / 1000×700 expanded presets. Desktop content has a roughly 32% Work History list and an independently scrolling detail panel. Below 540px of actual application width, it switches to list-first navigation with Back to Work History; selection and panel scroll survive minimizing and expansion. Closing remounts the app at its first sorted entry and normal size.
 
-Outstanding assets/content: official university logo, current résumé PDF, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. No pushes or deployments occur during this phase.
+`src/data/experience.ts` owns stable role IDs, employer, title, ISO year-month dates, location, and optional summary, accomplishments, skill IDs, project IDs, and HTTPS links. Only the verified E. Aferi role (Research and Project Support Intern, January–April 2026, Toronto, Ontario) is displayed. Summary, accomplishments, technologies, and project mappings are deliberately unset. A restrained detail-pending message fills the unfinished content area.
+
+Future related navigation can call `openApp('experience', roleId)`. The optional window resource request selects a verified role in the existing instance, including after minimize. Invalid IDs are ignored; ordinary dock restore preserves the current selection. No new skill mappings or Finder navigation are added.
+
+Fictional fixtures live exclusively under `tests/`. With Vite running, `/tests/browser/experience.html` exercises multiple roles; `?empty=1` checks empty data, and `?many=1` checks independent history scrolling. These test-only pages and data are not imported into the production entry or included in `dist/`. They are never shown in the live portfolio.
+
+Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 7 has not started; nothing is pushed or deployed.
