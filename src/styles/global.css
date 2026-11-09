@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Tailwind utilities and plain CSS share the same semantic design tokens. */
+@theme {
+  --color-desktop: #1D1D20;
+  --color-window: #252529;
+  --color-widget: #2B2B2F;
+  --color-elevated: #323237;
+  --color-border: #404046;
+  --color-primary: #F3F3F5;
+  --color-secondary: #B1B1B9;
+  --color-muted: #85858F;
+  --color-terminal: #A3D5B4;
+  --color-finder: #75A9E8;
+  --color-coffee: #D6A180;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: var(--font-sans);
+    color: var(--color-primary);
+    background: var(--color-desktop);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+  }
+}
