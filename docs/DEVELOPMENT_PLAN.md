@@ -9,17 +9,18 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 | 2 — Dock & Menu Bar | Six ordered application icons, typed registry, launch boundary, fixed menu with local live clock | 1 | Verify all five requested viewport sizes, hover/focus labels and Escape, Home focus, guarded unavailable apps, minute updates, no fake running indicators, no overflow or content overlap |
 | 3 — Window Manager | Reducer/context, shared controls, single-instance lifecycle, preset expansion, registry placeholders | 1–2 | Open/raise/close/minimize/restore/Home, instance preservation/reset, focus fallback and background controls, dock indicators, active menu name, all five viewport bounds; no dragging/resizing |
 | 4 — Education & Coffee | Compact real apps, centralized education data, shared canonical contact destinations | 3 | Program facts and graduation fallback, official-logo placeholder, ordered actions and missing-details states, safe external links, copy outcomes, all five viewport sizes and full existing lifecycle |
-| 5 — Technical Skills | Categorized skills application | 3; reuse patterns from 4 | Correct grouping, responsive content, window integration |
-| 6 — Projects Finder | Data-driven project explorer | 3; reuse application patterns | Project selection, navigation, empty states, shared project records |
-| 7 — Project Reports | Shareable project report views and router integration | 6 | Direct hash URL, reload, back/forward, unknown slug, persistent desktop state |
-| 8 — JARVIS | Terminal-style deterministic command interpreter | 3, 6–7 and shared portfolio data | Documented commands, invalid input, history, accessible output, shared controller actions; no AI |
-| 9 — Polish & Deployment | Accessibility, responsive behavior, subtle visual effects/animation where useful, Pages publishing | 1–8 | Keyboard and reduced-motion checks, performance, production preview, root asset paths, direct routes, then separately authorized deployment |
+| 5 — Technical Skills + Experience Registration | Categorized toolkit, accessible descriptions, sourced icons, confirmed graduation/phone, Experience registry/dock entry | 3–4 | Exact skill list and categories, popovers on hover/focus/tap, shared contact data, clipboard outcomes, seven-icon dock, Experience lifecycle, all viewport bounds |
+| 6 — Experience Application | Mail-inspired position list and selected-role detail split view | 5; verified work-history content | Multiple roles, selected role details, keyboard navigation, window lifecycle; no invented employers or accomplishments |
+| 7 — Projects Finder | Data-driven project explorer | 3, 5; verified project records | Project selection, navigation, empty states; add verified skill-to-project references only when supported |
+| 8 — Project Reports | Shareable reports and router integration | 7 | Direct hash URL, reload, back/forward, unknown slugs, persistent desktop |
+| 9 — JARVIS | Deterministic portfolio command interpreter | 6–8 and shared portfolio data | Valid/invalid commands, history, accessible output, shared launching including Experience; no AI |
+| 10 — Polish & Deployment | Accessibility, responsive behavior, restrained effects, Pages publishing | 1–9 | Keyboard/reduced motion, performance, production preview, root assets and direct routes, then separately authorized deployment |
 
 Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both depend on the window manager; the listed order keeps application patterns consistent. Project reports and JARVIS follow the project data so they reuse a single source of truth.
 
-The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 9; do not copy old deployment behavior into the rebuild.
+The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 10; do not copy old deployment behavior into the rebuild.
 
-Phases 0–4 are implemented. Phases 0–3 have local checkpoint commits; Phase 4 remains uncommitted for review. Phase 5 has not started.
+Phases 0–5 are implemented. Phases 0–4 have local checkpoint commits; Phase 5 remains uncommitted for review. Phase 6 has not started.
 
 ## Phase 3 verification
 
@@ -34,4 +35,14 @@ Phases 0–4 are implemented. Phases 0–3 have local checkpoint commits; Phase 
 - All 15 tests pass: the original eight lifecycle cases plus education facts/fallback, shared link order/identity, valid/missing destinations, future résumé wiring, and clipboard success/failure/unsupported/missing-number handling.
 - Browser checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640. Both windows stay within the workspace, without horizontal overflow. Desktop layouts have no internal scrollbars; the smallest Coffee view scrolls internally to reach Phone.
 - Open both, raise Education, minimize/restore it, close/reopen Coffee with a fresh instance, and Home preserving both running apps all pass. Keyboard access reaches enabled contact links. Shared AppWindow and window controls remain unchanged.
-- Pending: a verified official university logo, an explicitly approved public graduation date, a current résumé PDF, and a verified phone number. The existing personal photograph placeholder also remains. These omissions have visible accessible fallbacks; no invented details or broken links are exposed.
+- Phase 4 left logo, graduation, résumé, phone, and photograph pending. Phase 5 confirms graduation and phone; the other assets remain outstanding.
+
+## Phase 5 acceptance and remaining content
+
+The toolkit contains only the 18 supplied skills. Nine locally bundled Devicon SVGs and neutral Lucide symbols provide icons without adding a dependency. Descriptions support hover, focus, and click/tap; Escape and outside interaction dismiss them. Related work requires verified IDs, an implemented destination, and a resource-selection handler; no mappings are fabricated.
+
+Experience has a real seventh dock action and the shared single-instance lifecycle, but only the approved Phase 6 placeholder. Its full split view is not part of Phase 5. Both Technical Skills size states and the seven-icon dock are checked at 1920×1080, 1440×900, 1280×800, 390×844, and 320×640, with at least 44px dock targets and no horizontal overflow. Experience open/expand/minimize/restore/close/reopen, Home, active names, and running indicators are covered by lifecycle tests and browser checks.
+
+The confirmed May 2029 graduation and 437-606-3417 phone come from centralized configuration. Phone has copy feedback and a `tel:` action and remains absent from Quick Links. Clipboard denial/unsupported cases remain automated tests. Resume stays disabled because the supplied PDF could not be found. Place the real file unchanged at `public/documents/Ishtiyak_Ahmed_Resume.pdf` and configure its root-relative URL; do not generate a substitute.
+
+Before the next content review: supply the official university logo and personal photograph; review conservative skill descriptions and add only verified project/experience mappings. Phase 6 must use confirmed work-history records.

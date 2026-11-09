@@ -1,9 +1,9 @@
-export type ApplicationId = 'home' | 'jarvis' | 'education' | 'projects' | 'skills' | 'contact'
+export type ApplicationId = 'home' | 'jarvis' | 'education' | 'experience' | 'projects' | 'skills' | 'contact'
 export type WindowApplicationId = Exclude<ApplicationId, 'home'>
 export type LaunchApplication = (id: ApplicationId) => void
 
-type IconGlyph = 'house' | 'terminal' | 'graduation' | 'folder' | 'code' | 'coffee'
-type IconTone = 'silver' | 'terminal' | 'academic' | 'blue' | 'purple' | 'coffee'
+type IconGlyph = 'house' | 'terminal' | 'graduation' | 'folder' | 'code' | 'coffee' | 'briefcase'
+type IconTone = 'silver' | 'terminal' | 'academic' | 'blue' | 'purple' | 'coffee' | 'slate'
 
 export type ApplicationIcon =
   | { kind: 'glyph'; glyph: IconGlyph; tone: IconTone }
@@ -32,7 +32,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'house', tone: 'silver' },
   },
   jarvis: {
-    window: { normal: { width: 760, height: 500 }, expanded: { width: 1000, height: 700 }, placeholder: { message: 'Terminal implementation scheduled for Phase 8.' } },
+    window: { normal: { width: 760, height: 500 }, expanded: { width: 1000, height: 700 }, placeholder: { message: 'Terminal implementation scheduled for Phase 9.' } },
     id: 'jarvis', name: 'Beyond the Data', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'terminal', tone: 'terminal' },
   },
@@ -41,13 +41,18 @@ export const applications = {
     id: 'education', name: 'Education', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'graduation', tone: 'academic' },
   },
+  experience: {
+    window: { normal: { width: 720, height: 480 }, expanded: { width: 1000, height: 700 }, placeholder: { message: 'Professional experience application — implementation scheduled for Phase 6.' } },
+    id: 'experience', name: 'Experience', launch: 'window', singleInstance: true,
+    icon: { kind: 'glyph', glyph: 'briefcase', tone: 'slate' },
+  },
   projects: {
-    window: { normal: { width: 850, height: 560 }, expanded: { width: 1100, height: 740 }, placeholder: { message: 'Application implementation scheduled for Phase 6.' } },
+    window: { normal: { width: 850, height: 560 }, expanded: { width: 1100, height: 740 }, placeholder: { message: 'Application implementation scheduled for Phase 7.' } },
     id: 'projects', name: 'Projects', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'folder', tone: 'blue' },
   },
   skills: {
-    window: { normal: { width: 700, height: 520 }, expanded: { width: 950, height: 700 }, placeholder: { message: 'Application implementation scheduled for Phase 5.' } },
+    window: { normal: { width: 700, height: 520 }, expanded: { width: 950, height: 700 } },
     id: 'skills', name: 'Technical Skills', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'code', tone: 'purple' },
   },
@@ -59,5 +64,5 @@ export const applications = {
 } satisfies Record<ApplicationId, ApplicationDefinition>
 
 export const dockOrder: readonly ApplicationId[] = [
-  'home', 'jarvis', 'education', 'projects', 'skills', 'contact',
+  'home', 'jarvis', 'education', 'experience', 'projects', 'skills', 'contact',
 ]

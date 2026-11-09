@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Phase 4
+## Implemented through Phase 5
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain the Phase 1 layout and typed configuration in `data/desktop.ts`. No full-page navigation occurs.
 
@@ -8,9 +8,9 @@ Vite integrates React and Tailwind with `/` as the asset base. `styles/global.cs
 
 ## Application registry
 
-`data/apps.ts` is the single source of truth for the six stable IDs, exact display names, icon configurations, launch kind, single-instance policy, window size presets, expansion support, and temporary placeholder messages. `dockOrder` fixes navigation order. Home has no window. The internal `jarvis` ID displays **Beyond the Data**, which will host JARVIS; `contact` displays **Let's Grab a Coffee**.
+`data/apps.ts` is the single source of truth for the seven stable IDs, exact display names, icon configurations, launch kind, single-instance policy, window size presets, expansion support, and temporary placeholder messages. `dockOrder` fixes navigation order. Home has no window. The internal `jarvis` ID displays **Beyond the Data**, which will host JARVIS; `contact` displays **Let's Grab a Coffee**.
 
-Normal preferred sizes are Projects 850×560, Beyond the Data 760×500, Technical Skills 700×520, Education 420×content height, and Let's Grab a Coffee 440×content height. Expanded maxima are 1100×740, 1000×700, and 950×700 respectively for the first three. Education and Let's Grab a Coffee have disabled expansion controls. All preferred sizes are constrained to available space.
+Normal preferred sizes are Projects 850×560, Beyond the Data 760×500, Technical Skills 700×520, Education 420×content height, Let's Grab a Coffee 440×content height, and Experience 720×480. Expanded maxima are 1100×740, 1000×700, and 950×700 respectively for the first three; Experience expands up to 1000×700. Education and Let's Grab a Coffee have disabled expansion controls. All preferred sizes are constrained to available space.
 
 ## Window state and lifecycle
 
@@ -32,24 +32,38 @@ Installed Motion handles 180ms opacity/scale entrance, exit, minimize, and resto
 
 ## Dock and menu integration
 
-Dock's shared `(ApplicationId) => void` launch callback now calls `openApp`; Home dispatches Show Desktop through the same boundary. All six actions are supported. Running IDs come from all open instances, including minimized ones, and exclude Home. The menu reads the active name from the same registry. Its existing isolated browser-local clock remains unchanged, with minute-boundary updates and visibility resynchronization.
+Dock's shared `(ApplicationId) => void` launch callback now calls `openApp`; Home dispatches Show Desktop through the same boundary. All seven actions are supported. Running IDs come from all open instances, including minimized ones, and exclude Home. The menu reads the active name from the same registry. Its existing isolated browser-local clock remains unchanged, with minute-boundary updates and visibility resynchronization.
 
 DockIcon still supports Lucide glyph compositions or a replaceable custom asset. Existing 180ms hover/focus feedback, labels, Escape dismissal, reduced-motion support, and small-screen targets are preserved.
 
 ## Application content and shared data
 
-`apps/ApplicationContent.tsx` resolves Education and Let's Grab a Coffee to their real application components; the other three window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
+`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, and Technical Skills to their real application components; the other three window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
 
-`data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is unconfirmed and displays “To be confirmed”; the logo is a generic academic placeholder until a verified official institutional mark is supplied. No historic graduation date is assumed to be approved public content.
+`data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is confirmed as May 2029; the logo is a generic academic placeholder until a verified official institutional mark is supplied. The unknown-date fallback remains, but no historical alternative date overrides the confirmed value.
 
-`data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email and safe external profiles, an unavailable Resume row, and a disabled Phone button while details are pending. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
+`data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email and safe external profiles, an unavailable Resume row, and an enabled Phone copy button with a Call link. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
 
-Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. No live phone number or current résumé file is configured, so those actions remain unavailable. Copy outcomes are unit-tested with synthetic values; no phone number is fabricated. External links announce new-tab behavior and use `noopener noreferrer`.
+Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. The confirmed phone is 437-606-3417; clipboard success feedback is browser-verified and failure paths are unit-tested. The current résumé PDF remains unavailable, so Resume alone stays disabled. External links announce new-tab behavior and use `noopener noreferrer`.
 
 Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` already supply education/contact facts and will later supply project/skill facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
 
 ## Planned routes and incremental delivery
 
-Add React Router in Phase 7 for reports, preferably hash URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
+Add React Router in Phase 8 for reports, preferably hash URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
 
 No backend, database, AI service, or deployment workflow is added. Each phase remains independently reviewable with TypeScript, ESLint, production builds, relevant browser checks, and focused lifecycle tests.
+
+## Toolkit configuration, popovers, and future related work
+
+`data/skills.ts` owns the four category definitions and exact 18-skill selection, including stable identifiers, descriptions, discriminated brand/symbol icon references, and optional `{ applicationId: 'projects' | 'experience', resourceId }` mappings. Nine pinned Devicon SVGs are bundled through Vite; neutral Lucide symbols are used when no suitable brand asset was sourced. Asset source URLs and the MIT notice live with the SVGs. There is no added runtime dependency or external asset request.
+
+SkillsApp renders small button tiles with names always visible. Pointer hover, focus, and tap/click reveal a compact description region. A click pins it; Escape, outside interaction, or a second click dismisses it. Positions are measured against the internal scroll area, not the page, with horizontal bounds and above/below placement. Keyboard scrolling refreshes the focused description after native focus/scroll handling. Resize and ordinary pointer scrolling dismiss stale popovers. This is non-modal and does not trap focus.
+
+`resolveSkillWork` matches optional references to a future verified catalog and rejects placeholder destination apps using the central registry. SkillsApp also requires a resource-selection callback before rendering related actions; it calls shared `openApp` before selection. Current mappings and catalog are empty, so there are no speculative or disabled project/experience links.
+
+Experience is registered as the `experience` ID between Education and Projects. Its briefcase icon, presets, placeholder message, active menu name, and running indicator all use existing infrastructure. The future Phase 6 split view can replace its placeholder in ApplicationContent without changing the reducer or AppWindow. No employers or accomplishments are populated.
+
+## Current content decisions
+
+Graduation and phone are confirmed. Official university artwork and the personal photograph remain pending. `Ishtiyak_Ahmed(1).pdf` was not found in the workspace or accessible Codex attachment directory. Supply the actual current PDF unchanged as `public/documents/Ishtiyak_Ahmed_Resume.pdf`, then configure `/documents/Ishtiyak_Ahmed_Resume.pdf` once in `data/contact.ts`; both Resume actions already support safe new-tab behavior. Tests reject an enabled résumé path without a real public PDF. Final skill descriptions and work mappings await content review.

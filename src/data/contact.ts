@@ -6,16 +6,16 @@ export interface ContactConfiguration {
   linkedin: string | null
   github: string | null
   resume: string | null
-  phone: { display: string; copyValue: string } | null
+  phone: { display: string; copyValue: string; tel?: string } | null
 }
 
-// Verified destinations migrated from Phase 1. Resume and phone await current details.
+// Verified destinations; the current resume PDF is still unavailable.
 export const contactDetails: ContactConfiguration = {
   email: 'ishtiyak.ahmed@mail.utoronto.ca',
   linkedin: 'https://www.linkedin.com/in/ishtiyak-ahmed-598311396/',
   github: 'https://github.com/ishtiyak-ahmed',
   resume: null,
-  phone: null,
+  phone: { display: '437-606-3417', copyValue: '437-606-3417', tel: '+14376063417' },
 }
 
 export interface ContactLink {

@@ -12,8 +12,8 @@ export const education: EducationConfiguration = {
   campus: 'Mississauga Campus',
   major: 'Applied Statistics',
   minors: ['Computer Science', 'Geospatial Data Science'],
-  // A public portfolio date has not been explicitly confirmed.
-  expectedGraduation: null,
+  // Confirmed for the public portfolio in Phase 5.
+  expectedGraduation: 'May 2029',
   // Supply an official, verified institutional mark; do not recreate the logo.
   logo: null,
 }

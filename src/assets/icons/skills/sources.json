@@ -1,0 +1,41 @@
+{
+  "revision": "32fe1d3b3f36ad11f90ab94f7db59738139c2bf6",
+  "assets": [
+    {
+      "name": "python",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/python/python-original.svg"
+    },
+    {
+      "name": "java",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/java/java-original.svg"
+    },
+    {
+      "name": "javascript",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/javascript/javascript-original.svg"
+    },
+    {
+      "name": "typescript",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/typescript/typescript-original.svg"
+    },
+    {
+      "name": "sqlite",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/sqlite/sqlite-original.svg"
+    },
+    {
+      "name": "react",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/react/react-original.svg"
+    },
+    {
+      "name": "git",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/git/git-original.svg"
+    },
+    {
+      "name": "github",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/github/github-original.svg"
+    },
+    {
+      "name": "vercel",
+      "url": "https://raw.githubusercontent.com/devicons/devicon/32fe1d3b3f36ad11f90ab94f7db59738139c2bf6/icons/vercel/vercel-original.svg"
+    }
+  ]
+}

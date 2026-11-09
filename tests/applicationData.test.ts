@@ -1,16 +1,18 @@
 import assert from 'node:assert/strict'
+import { existsSync, readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { education, educationDetails } from '../src/data/education.ts'
 import { contactDetails, contactLinks, contactMethodOrder, getContactLinks, quickLinkOrder } from '../src/data/contact.ts'
 import { desktopContent } from '../src/data/desktop.ts'
 import { copyPhoneNumber } from '../src/apps/coffee/copyPhone.ts'
 
-test('Education configuration supplies the requested program facts and unconfirmed graduation fallback', () => {
+test('Education configuration supplies the requested program facts and confirmed graduation with fallback support', () => {
   assert.equal(education.institution, 'University of Toronto')
   assert.equal(education.campus, 'Mississauga Campus')
   assert.equal(education.major, 'Applied Statistics')
   assert.deepEqual(education.minors, ['Computer Science', 'Geospatial Data Science'])
-  assert.deepEqual(educationDetails(education).at(-1)?.values, ['To be confirmed'])
+  assert.deepEqual(educationDetails(education).at(-1)?.values, ['May 2029'])
+  assert.deepEqual(educationDetails({ ...education, expectedGraduation: null }).at(-1)?.values, ['To be confirmed'])
   assert.equal(education.logo, null)
   assert.deepEqual(educationDetails({ ...education, expectedGraduation: 'Confirmed public date' }).at(-1)?.values, ['Confirmed public date'])
 })
@@ -33,7 +35,9 @@ test('Contact actions use valid verified destinations and keep missing details u
     assert.equal(link.newTab, true)
   }
   assert.equal(contactLinks.find((link) => link.id === 'resume')?.href, null)
-  assert.equal(contactDetails.phone, null)
+  assert.equal(contactDetails.phone?.display, '437-606-3417')
+  assert.equal(contactDetails.phone?.copyValue, '437-606-3417')
+  assert.equal(contactDetails.phone?.tel, '+14376063417')
   const empty = getContactLinks({ email: null, linkedin: null, github: null, resume: null, phone: null })
   assert.ok(empty.every((link) => link.href === null && link.unavailableMessage.length > 0))
 })
@@ -61,4 +65,15 @@ test('A missing phone never attempts a clipboard write', async () => {
   let writes = 0
   assert.equal(await copyPhoneNumber(null, { writeText: async () => { writes++ } }), 'unavailable')
   assert.equal(writes, 0)
+})
+
+test('Resume is enabled only when the configured public PDF is present', () => {
+  if (contactDetails.resume) {
+    const path = new URL(`../public${contactDetails.resume}`, import.meta.url)
+    assert.ok(existsSync(path))
+    assert.equal(readFileSync(path).subarray(0, 5).toString(), '%PDF-')
+  } else {
+    assert.equal(contactLinks.find((link) => link.id === 'resume')?.href, null)
+  }
+  assert.equal(desktopContent.quickLinks.some((link) => link.id === ('phone' as string)), false)
 })

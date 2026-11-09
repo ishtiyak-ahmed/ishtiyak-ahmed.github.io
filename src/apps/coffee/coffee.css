@@ -22,3 +22,8 @@ button.contact-row:not(:disabled) { cursor: pointer; }
   .coffee-app { padding: 22px 18px 18px; }
   .coffee-app h2 { font-size: 22px; }
 }
+
+.coffee-app__phone-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -4px 6px 4px 37px; }
+.coffee-app__phone-actions .coffee-app__copy-hint { margin: 0; }
+.coffee-app__call { color: var(--color-coffee); font-size: 11px; padding: 6px 8px; border-radius: 5px; }
+.coffee-app__call:focus-visible { outline: 2px solid var(--color-coffee); outline-offset: 1px; }

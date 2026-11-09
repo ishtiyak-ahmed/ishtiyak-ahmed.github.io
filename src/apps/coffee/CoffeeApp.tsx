@@ -69,7 +69,7 @@ export function CoffeeApp() {
             {!phone && <Minus className="contact-row__action" size={14} aria-hidden="true" />}
             {phone && (copyResult === 'success' ? <Check className="contact-row__action" size={16} aria-hidden="true" /> : <Copy className="contact-row__action" size={16} aria-hidden="true" />)}
           </button>
-          {phone && <span className="coffee-app__copy-hint">{copying ? 'Copying…' : 'Copy number to clipboard'}</span>}
+          {phone && <div className="coffee-app__phone-actions"><span className="coffee-app__copy-hint">{copying ? 'Copying…' : 'Copy number to clipboard'}</span>{phone.tel && <a className="coffee-app__call" href={`tel:${phone.tel}`} aria-label={`Call ${phone.display}`}>Call</a>}</div>}
         </li>
       </ul>
       {phone && <p className="coffee-app__feedback" role="status" aria-live="polite">{copyResult ? copyMessages[copyResult] : ''}</p>}

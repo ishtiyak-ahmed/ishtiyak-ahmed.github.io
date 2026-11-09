@@ -60,8 +60,8 @@ test('focusing a background window changes stack order without changing other st
   assert.equal(windowReducer(focused, { type: 'focus', appId: 'projects' }), focused)
 })
 
-test('only Projects, Beyond the Data, and Technical Skills expand and return to normal', () => {
-  for (const appId of ['projects', 'jarvis', 'skills'] as const) {
+test('Projects, Beyond the Data, Technical Skills, and Experience expand and return to normal', () => {
+  for (const appId of ['projects', 'jarvis', 'skills', 'experience'] as const) {
     const opened = run({ type: 'open', appId })
     const expanded = windowReducer(opened, { type: 'toggleExpand', appId })
     assert.equal(expanded.windows[0].expanded, true)
@@ -78,4 +78,20 @@ test('stale actions cannot reopen closed windows or activate minimized windows',
   const minimized = run({ type: 'open', appId: 'projects' }, { type: 'minimize', appId: 'projects' })
   assert.equal(windowReducer(minimized, { type: 'focus', appId: 'projects' }), minimized)
   assert.equal(windowReducer(minimized, { type: 'toggleExpand', appId: 'projects' }), minimized)
+})
+
+test('Experience uses the same single-instance lifecycle and preserves expansion on restore', () => {
+  const opened = run({ type: 'open', appId: 'experience' }, { type: 'open', appId: 'experience' }, { type: 'toggleExpand', appId: 'experience' })
+  assert.equal(opened.windows.length, 1)
+  assert.equal(activeApplicationId(opened), 'experience')
+  const home = windowReducer(opened, { type: 'showDesktop' })
+  assert.equal(home.windows[0].expanded, true)
+  const restored = windowReducer(home, { type: 'open', appId: 'experience' })
+  assert.equal(restored.windows[0].instanceId, opened.windows[0].instanceId)
+  assert.equal(restored.windows[0].expanded, true)
+  const closed = windowReducer(restored, { type: 'close', appId: 'experience' })
+  assert.equal(closed.windows.length, 0)
+  const reopened = windowReducer(closed, { type: 'open', appId: 'experience' })
+  assert.equal(reopened.windows[0].expanded, false)
+  assert.notEqual(reopened.windows[0].instanceId, opened.windows[0].instanceId)
 })

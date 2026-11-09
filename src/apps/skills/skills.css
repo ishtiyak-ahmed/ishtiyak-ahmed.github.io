@@ -1,0 +1,29 @@
+.skills-app { padding: 26px 28px 32px; }
+.skills-app__intro h2 { margin: 0; font-size: 27px; font-weight: 500; line-height: 1.2; letter-spacing: -0.045em; }
+.skills-app__intro p { margin: 8px 0 26px; color: var(--color-secondary); font-size: 12px; line-height: 1.6; }
+.skill-category + .skill-category { margin-top: 23px; }
+.skill-category h3 { margin: 0 0 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 500; color: var(--color-secondary); }
+.skill-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px 12px; list-style: none; margin: 0; padding: 0; }
+.skill-tile { position: relative; min-width: 0; }
+.skill-tile:has(.skill-popover) { z-index: 2; }
+.skill-tile__button { width: 100%; min-height: 86px; padding: 12px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 10px; border: 0; border-radius: 11px; background: transparent; color: var(--color-primary); font: inherit; cursor: pointer; }
+.skill-tile__button span { font-size: 11px; line-height: 1.4; text-align: center; }
+.skill-tile__button:hover, .skill-tile__button[aria-expanded="true"] { background: rgb(255 255 255 / 4%); }
+.skill-tile__button:focus-visible { outline: 2px solid var(--color-finder); outline-offset: -2px; }
+.skill-icon { display: block; width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; }
+.skill-icon--monochrome { filter: brightness(0) invert(0.92); }
+.skill-popover { position: absolute; z-index: 3; top: calc(100% + 5px); left: var(--popover-left); width: var(--popover-width); padding: 12px 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-elevated); box-shadow: 0 6px 16px rgb(0 0 0 / 16%); }
+.skill-popover::before { content: ''; position: absolute; bottom: 100%; left: 0; right: 0; height: 6px; }
+.skill-popover[data-above="true"] { top: auto; bottom: calc(100% + 5px); }
+.skill-popover[data-above="true"]::before { top: 100%; bottom: auto; }
+.skill-popover strong { font-size: 12px; font-weight: 600; }
+.skill-popover p { margin: 5px 0 0; font-size: 12px; line-height: 1.55; color: var(--color-secondary); }
+.skill-popover button { margin-top: 8px; color: var(--color-finder); background: none; border: 0; font: inherit; cursor: pointer; }
+.skill-popover button:focus-visible { outline: 2px solid var(--color-finder); }
+@media (max-width: 450px) {
+  .skills-app { padding: 22px 18px 28px; }
+  .skill-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; }
+  .skills-app__intro h2 { font-size: 25px; }
+  .skill-tile__button { min-height: 88px; }
+  .skill-icon { width: 32px; height: 32px; }
+}

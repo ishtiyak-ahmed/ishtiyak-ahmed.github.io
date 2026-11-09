@@ -1,9 +1,9 @@
-import { CodeXml, Coffee, Folder, GraduationCap, House, Terminal } from 'lucide-react'
+import { BriefcaseBusiness, CodeXml, Coffee, Folder, GraduationCap, House, Terminal } from 'lucide-react'
 import type { ApplicationIcon } from '../../data/apps'
 
 const glyphs = {
   house: House, terminal: Terminal, graduation: GraduationCap,
-  folder: Folder, code: CodeXml, coffee: Coffee,
+  folder: Folder, code: CodeXml, coffee: Coffee, briefcase: BriefcaseBusiness,
 }
 
 export function DockIcon({ icon }: { icon: ApplicationIcon }) {

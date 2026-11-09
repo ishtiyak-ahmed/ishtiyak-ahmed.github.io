@@ -14,7 +14,7 @@ export function QuickLinksWidget({ links }: { links: ContactLink[] }) {
           return (
             <li key={id} className="quick-links__item">
               {href ? (
-                <a href={href} aria-label={label} aria-describedby={tooltipId}>
+                <a href={href} target={id === 'resume' ? '_blank' : undefined} rel={id === 'resume' ? 'noopener noreferrer' : undefined} aria-label={id === 'resume' ? `${label} (opens in a new tab)` : label} aria-describedby={tooltipId}>
                   <Icon size={18} strokeWidth={1.6} aria-hidden="true" />
                 </a>
               ) : (
