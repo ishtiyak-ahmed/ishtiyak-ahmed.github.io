@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 6 adds a responsive, Mail-inspired Experience application and integrates the supplied résumé. Experience currently shows one confirmed role; detailed wording remains pending review.
+A macOS-inspired personal portfolio built incrementally. Phase 7 adds a functioning Projects Finder and moves Currently beneath the upper-right clock. Experience shows one confirmed role; detailed project and experience wording remains pending review.
 
 ## Stack
 
@@ -38,7 +38,7 @@ src/
     windows/             WindowManager, AppWindow, controls, placeholder, CSS
     ui/                  Small local brand icon SVGs
   apps/
-    finder/              Future project explorer
+    finder/              Project explorer, navigation reducer, list/grid views
     jarvis/              Future deterministic portfolio terminal
     education/           Education information panel
     experience/          Split-view work history and local selection
@@ -68,7 +68,8 @@ Unused reserved directories contain only `.gitkeep`; they have no implementation
 7. Projects Finder
 8. Project Reports
 9. JARVIS
-10. Polish & Deployment
+10. Visual Redesign & Motion Polish
+11. Final Content, QA & Deployment
 
 See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance checks](docs/DEVELOPMENT_PLAN.md).
 
@@ -76,7 +77,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–5 are checkpointed locally; Phase 6 changes remain uncommitted for review. Publishing belongs to Phase 10.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–6 are checkpointed locally (Phase 6: `02619ad`). Phase 7 remains uncommitted for review. Publishing belongs to Phase 11.
 
 Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
 
@@ -92,7 +93,7 @@ Edit `src/data/desktop.ts` to update the introduction, Currently copy, or photo.
 
 Quick Links and Coffee share the verified email, LinkedIn, GitHub, and résumé destinations in `src/data/contact.ts`. The supplied `Ishtiyak_Ahmed copy.pdf` is copied byte-for-byte to `public/documents/Ishtiyak_Ahmed_Resume.pdf`. Both Resume actions open `/documents/Ishtiyak_Ahmed_Resume.pdf` in a new tab with `noopener noreferrer`; Vite includes that unchanged file in the production build. The original supplied file remains untouched.
 
-`components/desktop/desktop.css` controls the composition. The photo and Currently widgets align at the upper left, with a 48px Quick Links strip directly below the photo. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions (96px dock region on narrow screens). Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
+`components/desktop/desktop.css` controls the composition. The photo sits upper-left, with a 48px Quick Links strip directly beneath it at the same width. Currently sits upper-right beneath the menu clock, outside the menu bar. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions (96px dock region on narrow screens). Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
 
 The [Elena Gonci reference](https://elenagonci.com/) was inspected at 1440px desktop width for small widget proportions, central typography, negative space, and dock clearance. Only composition informed the layout; no source or graphic assets were copied.
 
@@ -110,9 +111,9 @@ The React reducer/context lives in `src/app/`, with `useWindowManager` exposing 
 
 Red closes and resets content on the next launch. Yellow hides the window without unmounting its content. Green toggles predefined normal/expanded sizes for Projects, Beyond the Data, Technical Skills, and Experience; it is disabled for Education and Let's Grab a Coffee. Expanded state survives minimizing and Home. Windows are centered within the usable area between the menu bar and dock, constrained to the viewport, and scroll internally as needed. There is no dragging, manual resizing, browser fullscreen, or focus trap.
 
-Education, Let's Grab a Coffee, Technical Skills, and Experience render real content through `apps/ApplicationContent.tsx`. Projects and Beyond the Data retain neutral development placeholders. Session/window state resets on page reload.
+Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects render real content through `apps/ApplicationContent.tsx`. Beyond the Data retains a neutral development placeholder. Session/window state resets on page reload.
 
-`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 30 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 43 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
 
 ## Education and Coffee configuration
 
@@ -130,14 +131,28 @@ Descriptions open on hover, keyboard focus, and tap/click. Click pins a descript
 
 Nine local Devicon SVGs supply recognizable product/language identities. Neutral Lucide symbols cover the other tools and practices. Source revision, URLs, licensing, and fallback choices are documented in `src/assets/icons/skills/README.md`; no icon package was added.
 
-Related work has no invented mappings. `resolveSkillWork` only exposes verified catalog entries for implemented destination applications. A future resource-selection callback is also required; supported references use the shared `openApp` API. Finder remains unsupported. Experience IDs must match the real experience configuration; no production skill mappings have been invented.
+Related work has no invented mappings. `resolveSkillWork` only exposes verified catalog entries for implemented destination applications. A future resource-selection callback is also required; supported references use the shared `openApp` API. Finder references must match the real project registry. Experience IDs must match the real experience configuration; no production skill mappings have been invented.
 
 Experience uses the same registry/window lifecycle, slate briefcase icon, and 720×480 normal / 1000×700 expanded presets. Desktop content has a roughly 32% Work History list and an independently scrolling detail panel. Below 540px of actual application width, it switches to list-first navigation with Back to Work History; selection and panel scroll survive minimizing and expansion. Closing remounts the app at its first sorted entry and normal size.
 
 `src/data/experience.ts` owns stable role IDs, employer, title, ISO year-month dates, location, and optional summary, accomplishments, skill IDs, project IDs, and HTTPS links. Only the verified E. Aferi role (Research and Project Support Intern, January–April 2026, Toronto, Ontario) is displayed. Summary, accomplishments, technologies, and project mappings are deliberately unset. A restrained detail-pending message fills the unfinished content area.
 
-Future related navigation can call `openApp('experience', roleId)`. The optional window resource request selects a verified role in the existing instance, including after minimize. Invalid IDs are ignored; ordinary dock restore preserves the current selection. No new skill mappings or Finder navigation are added.
+Future related navigation can call `openApp('experience', roleId)`. The optional window resource request selects a verified role in the existing instance, including after minimize. Invalid IDs are ignored; ordinary dock restore preserves the current selection. Finder consumes the same request mechanism for project IDs and logical paths.
 
 Fictional fixtures live exclusively under `tests/`. With Vite running, `/tests/browser/experience.html` exercises multiple roles; `?empty=1` checks empty data, and `?many=1` checks independent history scrolling. These test-only pages and data are not imported into the production entry or included in `dist/`. They are never shown in the live portfolio.
 
-Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 7 has not started; nothing is pushed or deployed.
+Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 7 is ready for review; nothing is pushed or deployed.
+
+## Projects Finder
+
+`src/data/projects.ts` owns stable IDs/slugs, titles, optional descriptions/category/technologies, folder icon, status, and typed resources. Each resource has a stable ID, title, type, destination (`external` or `local`), href, and optional description. Only valid destinations render: external URLs require HTTPS without credentials; local files must be explicitly listed in `projectAssetPaths` and exist in public assets. No local project assets are registered yet.
+
+The three confirmed folders are TTC Delay Patterns, JavaFX Paint Editor, and Tree-Based Data Visualizer. Only TTC has a configured external case study, https://ttc-delay-patterns.vercel.app (HTTP 200 verified). Other folders show concise pending-content information, without fictional files, repositories, metrics, or downloads. Safe external links announce a new tab and use `noopener noreferrer`.
+
+Finder uses one AppWindow. Its local reducer stores root/project history, history index, selection, search, and list/grid mode. Logical paths start at `/ishtiyak/projects`; a project uses its slug beneath that root. Single click selects; double-click, Enter, or an explicit Open action opens. Back/Forward, root/sidebar, and breadcrumbs navigate inside the window. Search matches configured titles/descriptions case-insensitively across all projects; clearing it returns to the current folder. Both views share the same data and handlers. Minimize, focus, and expansion preserve state; closing resets everything on reopening.
+
+`openApp('projects', projectIdOrPath)` opens/restores/focuses the existing instance at a valid project. Invalid requests leave Finder state intact. Skills related-work resolution validates real project IDs and still requires verified catalog relationships and a selection callback; no production relationships have been invented. Future JARVIS commands can reuse this registry.
+
+Phase 8 will map shareable hash URLs such as `/#/projects/ttc-delay-patterns` to this same slug resolver, keeping the desktop mounted and avoiding GitHub Pages server rewrites. No router dependency or browser deep-link behavior is introduced in Phase 7. Approved descriptions, final reports, repository/demo/documentation URLs, and verified skill relationships remain pending. Visual redesign is deliberately deferred to Phase 10.
+
+Tests use isolated fixtures under `tests/fixtures/` and `/tests/browser/finder.html`; those fictional records are excluded from production. Phase 7 checks cover selection/opening, history, search, view switching, missing/invalid resources, cross-app requests, and lifecycle reset/preservation.

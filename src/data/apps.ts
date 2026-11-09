@@ -47,7 +47,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'briefcase', tone: 'slate' },
   },
   projects: {
-    window: { normal: { width: 850, height: 560 }, expanded: { width: 1100, height: 740 }, placeholder: { message: 'Application implementation scheduled for Phase 7.' } },
+    window: { normal: { width: 850, height: 560 }, expanded: { width: 1100, height: 740 } },
     id: 'projects', name: 'Projects', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'folder', tone: 'blue' },
   },

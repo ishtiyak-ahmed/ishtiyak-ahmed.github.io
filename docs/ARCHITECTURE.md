@@ -1,8 +1,8 @@
 # Architecture
 
-## Implemented through Phase 6
+## Implemented through Phase 7
 
-`src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain the Phase 1 layout and typed configuration in `data/desktop.ts`. No full-page navigation occurs.
+`src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain typed configuration; Phase 7 positions Currently at upper-right and leaves the photo/Quick Links upper-left in `data/desktop.ts`. No full-page navigation occurs.
 
 Vite integrates React and Tailwind with `/` as the asset base. `styles/global.css` defines semantic theme tokens and the shared menu/dock geometry and layer variables. System sans-serif and monospace stacks avoid font downloads. The real photograph and official university logo remain pending; the supplied résumé is now integrated.
 
@@ -38,19 +38,19 @@ DockIcon still supports Lucide glyph compositions or a replaceable custom asset.
 
 ## Application content and shared data
 
-`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, Technical Skills, and Experience to their real application components; the other two window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
+`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects to their real application components; Beyond the Data still uses ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
 
 `data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is confirmed as May 2029; the logo is a generic academic placeholder until a verified official institutional mark is supplied. The unknown-date fallback remains, but no historical alternative date overrides the confirmed value.
 
-`data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email and safe external profiles, an unavailable Resume row, and an enabled Phone copy button with a Call link. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
+`data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email, safe external profiles and the supplied résumé, plus an enabled Phone copy button with a Call link. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
 
 Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. The confirmed phone is 437-606-3417; clipboard success feedback is browser-verified and failure paths are unit-tested. The supplied résumé PDF is copied unchanged into public/documents, and both Resume actions are enabled. External links announce new-tab behavior and use `noopener noreferrer`.
 
-Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` already supply education/contact facts and will later supply project/skill facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
+Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` supply education, contact, skill, experience, and project facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
 
 ## Planned routes and incremental delivery
 
-Add React Router in Phase 8 for reports, preferably hash URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
+In Phase 8, implement a small hash-route adapter for reports, using URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
 
 No backend, database, AI service, or deployment workflow is added. Each phase remains independently reviewable with TypeScript, ESLint, production builds, relevant browser checks, and focused lifecycle tests.
 
@@ -76,7 +76,7 @@ ExperienceApp fills the existing content area. CSS container queries use the win
 
 The existing `openApp` API now accepts an optional resource ID. A window instance may carry `{ resourceId, requestId }`; repeated explicit requests receive a new request ID, while normal dock restore keeps the existing request object. WindowManager passes it through ApplicationContent to ExperienceApp, which selects only IDs present in its own data. Closing removes the request with the window. Existing AppWindow controls and lifecycle policies are unchanged.
 
-Future Skills integrations can call `openApp('experience', roleId)`. `resolveSkillWork` now also validates Experience references against actual role IDs, while continuing to reject placeholder Finder destinations. No production mappings or Experience technologies are invented during this phase.
+Future Skills integrations can call `openApp('experience', roleId)`. `resolveSkillWork` now also validates Experience references against actual role IDs, and validates Finder references against actual project IDs. No production mappings or Experience technologies are invented during this phase.
 
 ## Current content and verification boundaries
 
@@ -85,3 +85,17 @@ The confirmed role is E. Aferi / Research and Project Support Intern / January�
 The user-supplied `Ishtiyak_Ahmed copy.pdf` is copied byte-for-byte to `public/documents/Ishtiyak_Ahmed_Resume.pdf`; the canonical contact configuration enables both safe new-tab Resume actions. The source and deployed asset hashes match. No résumé content is modified or converted into experience claims.
 
 Unit fixtures and a dedicated Vite browser harness live under tests, outside the production import graph. They cover sorting, repeated employers, switching, long content/list scroll, empty states, compact focus, lifecycle preservation/reset, and linked-role requests. Production builds must not contain the `TEST FIXTURE` marker or test HTML. No new dependencies are required.
+
+## Projects Finder (Phase 7)
+
+`data/projects.ts` centralizes the extensible Project/ProjectResource schema, stable IDs/slugs, logical root `/ishtiyak/projects`, project-path resolution, search, and destination validation. Optional metadata stays unset until verified. Production registers exactly three confirmed project folders; only TTC Delay Patterns has a supplied HTTPS case-study resource. External destinations use safe new-tab links. Local destinations require an explicit asset-path allowlist; no internal detail page or downloadable folder is simulated.
+
+`apps/finder/finderState.ts` is a pure local reducer with project-ID-or-root history, history index, list/grid mode, search, and item selection. History truncates after a new navigation from a previous entry, and same-location navigation avoids duplicate entries. Navigation clears selection/search; view switches preserve valid selection. Search filters all configured titles/descriptions, while keeping the underlying location so Clear returns to it. Invalid selections, paths, and resource requests are ignored.
+
+FinderApp renders a compact Projects-only sidebar, toolbar, breadcrumbs, and shared folder/resource items. Single clicks select, Enter/double-click/explicit Open activate, and valid external resources expose actual anchors. Folder navigation focuses the content heading. Narrow container layouts hide the sidebar, wrap the toolbar/search, and preserve reachable controls. The existing AppWindow owns bounds, traffic lights, focus, stacking, and lifecycle; Finder adds no window controls or global state.
+
+ApplicationContent passes existing `{ resourceId, requestId }` requests to Finder. `openApp('projects', idOrLogicalPath)` resolves a known project and navigates within the existing instance. Ordinary restoration keeps the request object and therefore local navigation intact; explicit repeated requests get new IDs. Invalid requests do not corrupt state. Close removes the lifetime and local reducer; reopen defaults to root/list/no selection/no search. Related-work resolution requires real project IDs plus the existing verified catalog/callback gates. No unverified relationships are rendered.
+
+Routing remains deferred. Phase 8 can interpret `/#/projects/:slug` through the same resolver and request boundary, without replacing the desktop or requiring GitHub Pages rewrites. Decide whether a router is needed then; none is required for current in-window history. Reports, descriptions, repositories, screenshots, and additional resource links await verified content. Phase 10 owns the comprehensive visual redesign and motion polish; Phase 11 owns final content, QA, and separately authorized deployment.
+
+The Finder browser harness uses isolated fixtures and existing shell/window components. Automated coverage includes data/resource validation, navigation/selection/search, request handling, and lifecycle. Production output must exclude test pages and fixture markers.

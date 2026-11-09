@@ -3,7 +3,7 @@ import type { WindowApplicationId } from '../../data/apps'
 import { DockIcon } from '../desktop/DockIcon'
 
 // Replace this component with each real app in its scheduled phase.
-export function ApplicationPlaceholder({ appId }: { appId: Exclude<WindowApplicationId, 'education' | 'contact' | 'skills' | 'experience'> }) {
+export function ApplicationPlaceholder({ appId }: { appId: Exclude<WindowApplicationId, 'education' | 'contact' | 'skills' | 'experience' | 'projects'> }) {
   const app = applications[appId]
   return (
     <div className="application-placeholder">

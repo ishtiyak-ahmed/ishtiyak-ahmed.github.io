@@ -12,15 +12,16 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 | 5 — Technical Skills + Experience Registration | Categorized toolkit, accessible descriptions, sourced icons, confirmed graduation/phone, Experience registry/dock entry | 3–4 | Exact skill list and categories, popovers on hover/focus/tap, shared contact data, clipboard outcomes, seven-icon dock, Experience lifecycle, all viewport bounds |
 | 6 — Experience Application | Mail-inspired position list and selected-role detail split view | 5; verified work-history content | Multiple roles, selected role details, keyboard navigation, window lifecycle; no invented employers or accomplishments |
 | 7 — Projects Finder | Data-driven project explorer | 3, 5; verified project records | Project selection, navigation, empty states; add verified skill-to-project references only when supported |
-| 8 — Project Reports | Shareable reports and router integration | 7 | Direct hash URL, reload, back/forward, unknown slugs, persistent desktop |
+| 8 — Project Reports | Shareable reports and hash-route integration | 7 | Direct hash URL, reload, back/forward, unknown slugs, persistent desktop |
 | 9 — JARVIS | Deterministic portfolio command interpreter | 6–8 and shared portfolio data | Valid/invalid commands, history, accessible output, shared launching including Experience; no AI |
-| 10 — Polish & Deployment | Accessibility, responsive behavior, restrained effects, Pages publishing | 1–9 | Keyboard/reduced motion, performance, production preview, root assets and direct routes, then separately authorized deployment |
+| 10 — Visual Redesign & Motion Polish | Comprehensive visual identity and motion refinement | 1–9 | Responsive visual review, keyboard/reduced motion, consistent surfaces and artwork |
+| 11 — Final Content, QA & Deployment | Approved content, regression QA, Pages publishing | 1–10 | Performance, production preview, root assets/direct routes, then separately authorized deployment |
 
 Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both depend on the window manager; the listed order keeps application patterns consistent. Project reports and JARVIS follow the project data so they reuse a single source of truth.
 
-The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 10; do not copy old deployment behavior into the rebuild.
+The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 11; do not copy old deployment behavior into the rebuild.
 
-Phases 0–6 are implemented. Phases 0–5 have local checkpoint commits; Phase 6 remains uncommitted for review. Phase 7 has not started.
+Phases 0–7 are implemented. Phases 0–6 have local checkpoint commits; Phase 6 was reviewed and checkpointed as `02619ad` before Phase 7. Phase 7 remains uncommitted for review; Phase 8 has not started.
 
 ## Phase 3 verification
 
@@ -58,3 +59,15 @@ Production checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640
 The supplied `Ishtiyak_Ahmed copy.pdf` is found and copied unchanged into the shared public résumé path. Both résumé links are enabled and open a new tab; verify the production PDF matches the source. The original root file is not changed.
 
 Pending content review: role summary and accomplishments, verified technologies/project mappings, official university logo, personal photograph, and final skill descriptions. Proceed to Phase 7 only with a new prompt.
+
+## Phase 7 acceptance and pending content
+
+Projects now uses a single Finder window with Projects-only sidebar, root/project breadcrumbs, bounded Back/Forward history, explicit accessible Open actions, selection, list/grid views, and global title/description search. Existing window controls, sizes, focus, indicators, minimize/restore, and reset-on-close are preserved. Requests through `openApp('projects', projectIdOrPath)` use the same optional request boundary as Experience and ignore invalid destinations.
+
+Currently is positioned upper-right below the clock, outside the menu. Photo and its aligned Quick Links remain upper-left; hero wording, dock order, menu bar, and widget configuration are unchanged. Narrow layouts retain flowing readable widgets. This phase contains no broader visual redesign.
+
+The 43 automated tests include the existing 30 and 13 Finder scenarios, with isolated fixture projects rather than fictional production data. Browser checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640, normal/expanded bounds, menu/dock clearance, widget placement, explicit mobile opening, navigation, keyboard opening, search/empty states, view switching, resources, and lifecycle. Test-only harness pages must stay outside the production bundle.
+
+Production contains only the three confirmed project names. TTC's supplied case study is the sole resource (HTTP 200 verified); other folders show pending information. Before Phase 8, supply approved descriptions/reports and any verified repository, demo, documentation, or dashboard destinations. Add related skill mappings only when confirmed. Phase 8 will connect hash URLs to stable slugs using the existing resolver; a routing dependency is not assumed. No push, deployment, or Phase 7 commit is authorized.
+
+Final Phase 7 checks: strict TypeScript, ESLint, all 43 tests, and production build pass. Browser console contains no warnings/errors. The external TTC resource opens the real case study in a new tab. Production excludes test harnesses/fixture markers, and the source/public/build résumé hashes match.

@@ -1,0 +1,56 @@
+/* Functional Finder layout using existing surfaces and shared window chrome. */
+.finder-app { height: 100%; min-height: 0; container: finder / inline-size; }
+.finder-layout { display: grid; grid-template-columns: 140px minmax(0, 1fr); height: 100%; }
+.finder-sidebar { padding: 16px 8px; background: #28282d; border-right: 1px solid var(--color-border); }
+.finder-sidebar button { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 36px; padding: 8px; text-align: left; }
+.finder-app button, .finder-item__open { color: var(--color-primary); font: inherit; font-size: 12px; border: 1px solid transparent; border-radius: 5px; background: transparent; cursor: pointer; }
+.finder-app button:disabled { color: var(--color-muted); cursor: default; }
+.finder-app button:not(:disabled):hover, .finder-item__open:hover { background: rgb(255 255 255 / 5%); }
+.finder-app button:focus-visible, .finder-app a:focus-visible, .finder-app input:focus-visible, .finder-content:focus-visible, .finder-content h2:focus-visible { outline: 2px solid var(--color-finder); outline-offset: -2px; }
+.finder-sidebar button[aria-current], .finder-view button[aria-pressed="true"] { background: rgb(117 169 232 / 13%); }
+.finder-main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.finder-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--color-border); }
+.finder-toolbar__navigation, .finder-view { display: flex; gap: 2px; }
+.finder-toolbar button { min-height: 34px; min-width: 34px; display: inline-flex; align-items: center; justify-content: center; padding: 5px; }
+.finder-open { gap: 5px; }
+.finder-search { display: flex; align-items: center; flex: 1; min-width: 140px; gap: 6px; padding: 0 6px; background: var(--color-desktop); border: 1px solid var(--color-border); border-radius: 5px; }
+.finder-search input { width: 100%; min-width: 0; height: 32px; background: transparent; border: 0; color: var(--color-primary); font: inherit; font-size: 12px; }
+.finder-search input::-webkit-search-cancel-button { display: none; }
+.finder-search button { min-width: 24px; }
+.finder-breadcrumbs { display: flex; align-items: center; gap: 3px; padding: 5px 10px; border-bottom: 1px solid rgb(255 255 255 / 5%); flex-wrap: wrap; }
+.finder-breadcrumbs button { min-height: 28px; padding: 4px; max-width: 100%; overflow-wrap: anywhere; }
+.finder-breadcrumbs__owner { color: var(--color-secondary); font-size: 11px; }
+.finder-content { min-height: 0; overflow: auto; flex: 1; padding: 18px; overscroll-behavior: contain; }
+.finder-content__header { margin-bottom: 15px; }
+.finder-content h2 { margin: 0; font-size: 20px; font-weight: 500; line-height: 1.4; }
+.finder-content__header p, .finder-empty { margin: 8px 0 0; color: var(--color-secondary); font-size: 12px; line-height: 1.7; }
+.finder-items { list-style: none; margin: 0; padding: 0; }
+.finder-items--list .finder-item + .finder-item { border-top: 1px solid rgb(255 255 255 / 5%); }
+.finder-item { display: flex; align-items: stretch; min-width: 0; border-radius: 6px; }
+.finder-item[data-selected="true"] { background: rgb(117 169 232 / 13%); }
+.finder-item__select { display: flex; align-items: center; flex: 1; min-width: 0; gap: 10px; padding: 10px 8px; text-align: left; }
+.finder-item__select > svg { flex-shrink: 0; }
+.finder-item__select > span { min-width: 0; }
+.finder-item__title { display: block; line-height: 1.5; overflow-wrap: anywhere; }
+.finder-item__metadata { display: block; color: var(--color-secondary); font-size: 10px; line-height: 1.6; margin-top: 3px; }
+.finder-folder-icon { color: var(--color-finder); }
+.finder-item__open { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 44px; text-decoration: none; }
+.finder-items--grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.finder-items--grid .finder-item { flex-direction: column; border: 1px solid rgb(255 255 255 / 5%); }
+.finder-items--grid .finder-item__select { flex-direction: column; text-align: center; padding: 15px 8px 8px; }
+.finder-items--grid .finder-item__open { align-self: center; min-width: 44px; }
+.finder-status { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-top: 1px solid var(--color-border); color: var(--color-secondary); font-size: 10px; }
+.finder-status span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.finder-status span:last-child { flex-shrink: 0; }
+@container finder (max-width: 560px) {
+  .finder-layout { grid-template-columns: minmax(0, 1fr); }
+  .finder-sidebar { display: none; }
+  .finder-toolbar { gap: 4px; padding: 6px; }
+  .finder-toolbar button { min-width: 44px; min-height: 44px; }
+  .finder-search { order: 3; flex-basis: 100%; }
+  .finder-view { margin-left: auto; }
+  .finder-breadcrumbs { padding-inline: 6px; }
+  .finder-content { padding: 14px; }
+  .finder-items--grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+  .finder-item__open { min-width: 44px; }
+}
