@@ -3,7 +3,7 @@
   --dock-icon-size: 56px;
   --dock-target-size: 64px;
   position: fixed;
-  z-index: 20;
+  z-index: var(--layer-dock);
   bottom: max(22px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);

@@ -35,3 +35,15 @@
     min-width: 320px;
   }
 }
+
+/* Central desktop chrome geometry and layering, shared with window bounds. */
+.os-shell {
+  --menu-region: 40px;
+  --dock-region: 120px;
+  --layer-windows: 10;
+  --layer-dock: 20;
+  --layer-menu: 30;
+}
+@media (max-width: 700px) {
+  .os-shell { --dock-region: 96px; }
+}

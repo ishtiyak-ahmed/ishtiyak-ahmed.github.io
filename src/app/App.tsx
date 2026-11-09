@@ -1,26 +1,33 @@
-import { useRef } from 'react'
-import { applications } from '../data/apps'
-import type { LaunchApplication } from '../data/apps'
+import { useEffect, useRef } from 'react'
+import { applications, dockOrder } from '../data/apps'
 import { Desktop } from '../components/desktop/Desktop'
 import { Dock } from '../components/desktop/Dock'
 import { MenuBar } from '../components/desktop/MenuBar'
+import { WindowManager } from '../components/windows/WindowManager'
+import { WindowManagerProvider } from './WindowManagerProvider'
+import { useWindowManager } from '../hooks/useWindowManager'
 
-export function App() {
+function DesktopShell() {
   const desktopRef = useRef<HTMLElement>(null)
+  const { state, activeAppId, openApp } = useWindowManager()
 
-  // Phase 3 will extend this one dispatch point with real window operations.
-  const launchApplication: LaunchApplication = (id) => {
-    if (applications[id].launch === 'desktop') {
+  useEffect(() => {
+    if (activeAppId === 'home' && state.focusRequest > 0) {
       desktopRef.current?.focus({ preventScroll: true })
       window.scrollTo({ top: 0, behavior: 'instant' })
     }
-  }
+  }, [activeAppId, state.focusRequest])
 
   return (
-    <>
-      <MenuBar activeApplicationName={applications.home.name} />
+    <div className="os-shell">
+      <MenuBar activeApplicationName={applications[activeAppId].name} />
       <Desktop desktopRef={desktopRef} />
-      <Dock onLaunch={launchApplication} availableAppIds={['home']} />
-    </>
+      <WindowManager />
+      <Dock onLaunch={openApp} availableAppIds={dockOrder} runningAppIds={state.windows.map((window) => window.appId)} />
+    </div>
   )
+}
+
+export function App() {
+  return <WindowManagerProvider><DesktopShell /></WindowManagerProvider>
 }

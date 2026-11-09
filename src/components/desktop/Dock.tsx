@@ -41,6 +41,7 @@ export function Dock({ onLaunch, availableAppIds, runningAppIds = [] }: DockProp
               </button>
               <span className="dock__tooltip" role="tooltip" id={tooltipId}>
                 {app.name}
+                {running && <span className="sr-only"> — Running</span>}
                 {!available && <span className="dock__availability">Not yet available</span>}
               </span>
             </li>

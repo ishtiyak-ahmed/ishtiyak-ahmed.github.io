@@ -1,10 +1,10 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 2 adds a fixed menu bar, live local clock, and six-icon dock to the viewport-based desktop homepage. The window manager and portfolio applications remain planned.
+A macOS-inspired personal portfolio built incrementally. Phase 3 adds a lightweight window manager to the persistent desktop, menu bar, and six-icon dock. Real application content remains scheduled for later phases.
 
 ## Stack
 
-React, TypeScript (strict), Vite, and Tailwind CSS through its Vite plugin. Lucide React supplies general widget icons; Motion is installed for later animations and remains unused. ESLint checks TypeScript and React conventions. No backend or external font service is required.
+React, TypeScript (strict), Vite, and Tailwind CSS through its Vite plugin. Lucide React supplies general widget icons; Motion provides restrained window lifecycle animations. ESLint checks TypeScript and React conventions. No backend or external font service is required.
 
 ## Local development
 
@@ -20,6 +20,7 @@ Open the URL printed by Vite. System fonts provide a native sans-serif UI and a 
 ```sh
 npm run typecheck  # Strict TypeScript checks for app and Vite config
 npm run lint       # ESLint
+npm test           # Dependency-free window lifecycle tests
 npm run build      # TypeScript checks, then production output in dist/
 npm run preview    # Serve the production build locally
 ```
@@ -30,11 +31,11 @@ npm run preview    # Serve the production build locally
 public/                  Static files copied without transformation
 src/
   main.tsx               React entry point
-  app/App.tsx            Desktop composition; future OS controller
+  app/App.tsx            Persistent shell, controller context, window reducer
   components/
     desktop/             Desktop, hero, Dock, DockIcon, MenuBar, CSS
       widgets/           Photo, Currently, Quick Links
-    windows/             Reserved for shared window chrome
+    windows/             WindowManager, AppWindow, controls, placeholder, CSS
     ui/                  Small local brand icon SVGs
   apps/
     finder/              Future project explorer
@@ -43,7 +44,7 @@ src/
     skills/              Future categorized skills application
     coffee/              Future coffee-themed contact application
   data/                  Typed desktop content, destinations, application registry
-  hooks/                 Future shared behavior
+  hooks/                 useWindowManager controller hook
   styles/global.css      Tailwind import, tokens, global base styles
   assets/{icons,images}/  Future bundled assets
 docs/
@@ -72,7 +73,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0 and 1 are checkpointed locally; Phase 2 changes remain uncommitted for review. Publishing belongs to Phase 9.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–2 are checkpointed locally; Phase 3 changes remain uncommitted for review. Publishing belongs to Phase 9.
 
 Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
 
@@ -96,6 +97,16 @@ The [Elena Gonci reference](https://elenagonci.com/) was inspected at 1440px des
 
 The dock order and display names come from `src/data/apps.ts`: Home, Beyond the Data, Education, Projects, Technical Skills, and Let's Grab a Coffee. Each icon uses a consistent rounded-square treatment with Lucide artwork; registry icon configuration can be replaced with a custom image later.
 
-Home returns focus to the desktop. The other five buttons are explicitly not yet available: labels appear on hover/focus, and activation does not open anything. No running indicators are shown. The dock accepts a shared launch callback and real running IDs for the future window manager. Labels dismiss with Escape; reduced motion disables magnification. Touch targets remain at least 44px wide even at 320px.
+Home minimizes all visible applications and focuses the desktop, preserving running instances. Each other dock icon opens, restores, or raises its one window. Running indicators reflect open instances, including minimized ones. Labels dismiss with Escape; reduced motion disables magnification. Touch targets remain at least 44px wide even at 320px.
 
-The fixed menu shows **Ishtiyak OS | Home** and the visitor's local date/time. The clock updates once per minute and resyncs when the page becomes visible. Only the clock rerenders for time changes. No fake system indicators or nonfunctional menus are included. No dependencies were added in Phase 2.
+The fixed menu shows **Ishtiyak OS | active application** (Home when no window is visible) and the visitor's local date/time. The clock updates once per minute and resyncs when the page becomes visible. Only the clock rerenders for time changes. No fake system indicators or nonfunctional menus are included. No dependencies were added in Phase 2.
+
+## Window manager
+
+The React reducer/context lives in `src/app/`, with `useWindowManager` exposing open, close, minimize, restore, focus, expand, and Show Desktop actions. Window metadata and size presets live in `src/data/apps.ts`; shared chrome lives in `src/components/windows/`.
+
+Red closes and resets content on the next launch. Yellow hides the window without unmounting its content. Green toggles predefined normal/expanded sizes for Projects, Beyond the Data, and Technical Skills; it is disabled for Education and Let's Grab a Coffee. Expanded state survives minimizing and Home. Windows are centered within the usable area between the menu bar and dock, constrained to the viewport, and scroll internally as needed. There is no dragging, manual resizing, browser fullscreen, or focus trap.
+
+Each window currently contains only its registry name, icon, and neutral development message. Replace these placeholders during the scheduled application phases. No real application content is implemented in Phase 3. Session/window state resets on page reload.
+
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify eight lifecycle scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.

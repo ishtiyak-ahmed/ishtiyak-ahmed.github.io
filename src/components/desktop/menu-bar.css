@@ -1,6 +1,6 @@
 .menu-bar {
   position: fixed;
-  z-index: 30;
+  z-index: var(--layer-menu);
   inset: 0 0 auto;
   height: 40px;
   padding-inline: 22px;

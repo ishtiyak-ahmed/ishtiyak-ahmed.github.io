@@ -7,7 +7,7 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 | 0 — Project Initialization | Vite/React/TypeScript setup, theme tokens, minimal message, documentation, local rebuild branch | Existing repository history | Install, typecheck, lint, build, and render the placeholder; verify root asset base and unchanged remote |
 | 1 — Desktop Foundation | Desktop shell, exact introduction, photo placeholder, Currently, horizontal Quick Links, menu/dock spacing | 0 | Verify 1440px/1920px and narrow layouts, small widget proportions, link destinations and disabled Resume, keyboard labels, and no overflow |
 | 2 — Dock & Menu Bar | Six ordered application icons, typed registry, launch boundary, fixed menu with local live clock | 1 | Verify all five requested viewport sizes, hover/focus labels and Escape, Home focus, guarded unavailable apps, minute updates, no fake running indicators, no overflow or content overlap |
-| 3 — Window Manager | Shared chrome and central open/focus/close/minimize/restore behavior; geometry as needed | 1–2 | Multiple windows, focus/stack order, restore, bounds, keyboard access; connect dock actions |
+| 3 — Window Manager | Reducer/context, shared controls, single-instance lifecycle, preset expansion, registry placeholders | 1–2 | Open/raise/close/minimize/restore/Home, instance preservation/reset, focus fallback and background controls, dock indicators, active menu name, all five viewport bounds; no dragging/resizing |
 | 4 — Education & Coffee | Compact education and coffee-themed contact applications | 3 | Correct data, readable content, valid contact links, full window lifecycle |
 | 5 — Technical Skills | Categorized skills application | 3; reuse patterns from 4 | Correct grouping, responsive content, window integration |
 | 6 — Projects Finder | Data-driven project explorer | 3; reuse application patterns | Project selection, navigation, empty states, shared project records |
@@ -19,4 +19,12 @@ Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both de
 
 The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 9; do not copy old deployment behavior into the rebuild.
 
-Phases 0–2 are implemented. Phases 0 and 1 have local checkpoint commits; Phase 2 remains uncommitted for review. The real photograph and a current Resume file are pending. Only Home has a supported dock action; the five window applications are explicitly unavailable. Phase 3 has not started.
+Phases 0–3 are implemented. Phases 0–2 have local checkpoint commits; Phase 3 remains uncommitted for review. The real photograph and current Resume file are pending. Phase 4 has not started.
+
+## Phase 3 verification
+
+- `npm test`: eight dependency-free reducer tests cover single instances, focus order, expansion policy, Home, minimized restoration, fresh close/reopen lifetimes, focus fallback, and stale actions. Tests are included in strict TypeScript checking.
+- Browser lifecycle checks: one window per app; real indicators; background focus and controls; all three expansion toggles; disabled Education/Coffee expansion; Home preserving five instances; keyboard access without trapping focus; close/minimize selecting the next window or Home.
+- Layout: 1920×1080, 1440×900, 1280×800, 390×844, and 320×640 have no horizontal overflow. Normal/expanded windows remain inside the workspace below MenuBar and above Dock. Small-screen controls retain 44×44px targets.
+- Additional short-screen check: internal content scrolling at 320×320 retained its scroll position after minimize/restore and reset to the top after close/reopen.
+- Application content is still a minimal registry-driven development placeholder. Replace it in Phases 4–8 without changing the window lifecycle.

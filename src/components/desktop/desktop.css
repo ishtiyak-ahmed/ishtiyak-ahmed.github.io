@@ -1,8 +1,6 @@
 /* Reserved bands keep the fixed menu bar and dock clear of desktop content.
    The canvas uses grid tracks rather than independently positioned widgets. */
 .desktop {
-  --menu-region: 40px;
-  --dock-region: 120px;
   --desktop-gutter: clamp(28px, 3.3vw, 64px);
   --photo-size: clamp(168px, 12.5vw, 216px);
   min-height: 100svh;
@@ -169,7 +167,7 @@
 }
 
 @media (max-width: 700px) {
-  .desktop { --desktop-gutter: 24px; --menu-region: 40px; --dock-region: 96px; }
+  .desktop { --desktop-gutter: 24px; }
   .desktop__canvas { grid-template-rows: auto auto; align-content: start; gap: 56px; }
   .desktop__widgets {
     --photo-size: clamp(132px, 30vw, 180px);

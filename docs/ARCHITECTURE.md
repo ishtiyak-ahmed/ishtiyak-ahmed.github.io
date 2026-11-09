@@ -1,49 +1,49 @@
 # Architecture
 
-## Implemented through Phase 2
+## Implemented through Phase 3
 
-`src/main.tsx` mounts React in Strict Mode and imports `styles/global.css`. `app/App.tsx` renders `components/desktop/Desktop.tsx`. The desktop composes `DesktopHero`, `PhotoWidget`, `CurrentlyWidget`, and `QuickLinksWidget`, with typed configuration in `data/desktop.ts`. `components/desktop/desktop.css` defines a responsive grid, compact upper-left widgets, a centered introduction, and reserved regions for fixed menu/dock chrome. No window state is implemented. Vite integrates React and Tailwind, using `/` as the asset base. Global theme variables expose the requested graphite palette as both CSS variables and Tailwind utilities. System sans-serif and monospace stacks avoid font downloads.
+`src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain the Phase 1 layout and typed configuration in `data/desktop.ts`. No full-page navigation occurs.
 
-Currently and Quick Links are data-driven. The photo accepts a source, alt text, and crop position; without a source it renders a neutral placeholder. Lucide supplies general icons; two local SVGs supply brand marks not present in Lucide. Missing link destinations render disabled, without anchors.
+Vite integrates React and Tailwind with `/` as the asset base. `styles/global.css` defines semantic theme tokens and the shared menu/dock geometry and layer variables. System sans-serif and monospace stacks avoid font downloads. The real photograph and current Resume file are still pending.
 
-## Application registry and launch boundary
+## Application registry
 
-`data/apps.ts` is the single source of truth for the six application IDs, display names, icon configuration, launch kind, and single-instance metadata. `dockOrder` fixes the navigation order. The internal `jarvis` ID displays **Beyond the Data**; JARVIS will be its terminal application. `contact` displays **Let's Grab a Coffee**. The registry contains no application UI or window state.
+`data/apps.ts` is the single source of truth for the six stable IDs, exact display names, icon configurations, launch kind, single-instance policy, window size presets, expansion support, and temporary placeholder messages. `dockOrder` fixes navigation order. Home has no window. The internal `jarvis` ID displays **Beyond the Data**, which will host JARVIS; `contact` displays **Let's Grab a Coffee**.
 
-`Dock` receives `onLaunch: LaunchApplication`, `availableAppIds`, and optional `runningAppIds`. All actions use the same `(id: ApplicationId) => void` contract. `App` owns the dispatch function; currently it only focuses the desktop and returns the page to the top for Home. The other five buttons remain keyboard-focusable with `aria-disabled`, explanatory tooltips, and guarded click handlers. They neither invoke launch nor change the active application. Availability is a capability supplied by the controller, not a registry fact.
+Normal preferred sizes are Projects 850×560, Beyond the Data 760×500, Technical Skills 700×520, Education 420×content height, and Let's Grab a Coffee 440×content height. Expanded maxima are 1100×740, 1000×700, and 950×700 respectively for the first three. Education and Let's Grab a Coffee have disabled expansion controls. All preferred sizes are constrained to available space.
 
-Phase 3 should extend the central dispatcher with real window operations, supply availability from implemented launch support, derive the menu's active name from the focused window and registry, and pass real running IDs. No running indicators are rendered in Phase 2. There is no temporary window implementation to remove.
+## Window state and lifecycle
 
-`DockIcon` maps configured glyphs to Lucide compositions. Each icon can instead use `{ kind: 'asset', src }` without changing Dock. Size, corner radius, tone, and 180ms scale feedback live in `dock.css`; reduced-motion preferences disable transitions and transforms. Dock labels work on hover and keyboard focus and dismiss with Escape. Narrow-screen buttons retain at least 44×44px targets.
+`app/windowState.ts` contains a pure reducer. Open instances form a back-to-front array with application ID, unique lifetime ID, minimized flag, and expanded flag. Absence means closed. The active application is derived from the last non-minimized instance, falling back to Home; it is not duplicated in separate state. A focus-request counter distinguishes requests to refocus an already-active application.
 
-`MenuBar` accepts `activeApplicationName`. Its isolated `LocalClock` formats the browser's local date/time with Intl, updates at the next minute boundary, resynchronizes when the page becomes visible, and cleans up its timeout and listener on unmount. This is a client-rendered Vite application, with no server hydration. Clock ticks rerender only the clock. The menu remains 40px tall; narrow layouts now reserve that same height instead of the old empty 24px band.
+`WindowManagerProvider` exposes `openApp`, `closeApp`, `minimizeApp`, `restoreApp`, `focusApp`, `toggleExpand`, and `showDesktop` through `useWindowManager`. Launching an existing application restores and raises its single instance. Closing removes it, while reopening allocates a fresh lifetime ID and resets expansion. The lifetime ID is the React key, so even immediate reopening during an exit animation mounts fresh content.
 
-Everything below is a plan. No window controller, window system, or router is implemented yet.
+Minimizing and Home keep application content mounted. Minimized windows become inert and inaccessible immediately, fade out, then become visually hidden. Their content and expansion state survive. Home minimizes all windows without removing them. Closing or minimizing the front window selects the next visible one, or Home.
 
-## Persistent desktop and applications
+WindowManager renders instances in stable lifetime order and applies centrally derived stacking indices from focus order. Changing focus therefore changes layers without moving pressed controls in the DOM. This avoids losing pointer clicks when a background window is raised. No event bus, global state library, persistence, dragging, or manual resizing is implemented.
 
-`app/` will compose a persistent desktop shell and a central OS controller. Desktop surfaces and widgets belong in `components/desktop/`; shared window chrome belongs in `components/windows/`; small reusable controls belong in `components/ui/`.
+## Rendering, bounds, focus, and animation
 
-Feature UI stays inside `apps/`: Projects will provide the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS, which interprets a fixed set of portfolio commands. Project report components can live with Finder initially; introduce a separate module only when the actual content warrants it.
+`AppWindow` supplies non-modal dialog semantics, shared title bar, WindowControls, internal scrolling, and active-window emphasis. The workspace is fixed between the shared menu and dock reservations, with small edge gutters. Every window is centered within that area, with CSS maximum dimensions limiting it on short/narrow viewports. A single isolated window layer sits below dock and menu layers; internal indices never grow without bound.
 
-## Central controller and window management
+Opening/restoring focuses the active window. Closing/minimizing focuses the next visible window or desktop. Pointer and keyboard focus inside a background window raise it without stealing focus from its controls. Ordinary windows do not trap focus; Tab may move between windows, desktop links, and Dock. Narrow-screen window controls are 44×44px.
 
-Start with React state or a reducer and a context at the shell level. The controller will own application/window identity, open and minimized state, focused window, stacking order, and geometry when dragging/resizing is introduced. Keep transient input and feature-specific state inside each application.
+Installed Motion handles 180ms opacity/scale entrance, exit, minimize, and restore transitions. CSS transitions preferred width/height over 200ms without moving the desktop. [Motion reduced-motion support](https://motion.dev/docs/react-use-reduced-motion) and CSS media queries disable movement/transitions when requested. Exiting windows are inert while their visual exit finishes.
 
-Applications will call a small typed controller API through context, such as open, close, focus, minimize, and restore. Dock actions, Finder project selection, and JARVIS commands will use the same operations. Applications should not manipulate each other's internal state or query the DOM to control windows.
+## Dock and menu integration
 
-Window rendering and shared chrome will read controller state and report user actions to it. Define precise types when Phase 3 makes these behaviors concrete; do not build an event bus or general-purpose desktop framework in advance.
+Dock's shared `(ApplicationId) => void` launch callback now calls `openApp`; Home dispatches Show Desktop through the same boundary. All six actions are supported. Running IDs come from all open instances, including minimized ones, and exclude Home. The menu reads the active name from the same registry. Its existing isolated browser-local clock remains unchanged, with minute-boundary updates and visibility resynchronization.
 
-## Data-driven content
+DockIcon still supports Lucide glyph compositions or a replaceable custom asset. Existing 180ms hover/focus feedback, labels, Escape dismissal, reduced-motion support, and small-screen targets are preserved.
 
-Put typed project, education, skill, and contact records in `data/` as features arrive. Use stable IDs and project slugs so Finder, project reports, and JARVIS can share the same facts. Keep presentation separate from records; bundle imported images in `assets/`, and use `public/` for files requiring stable unchanged URLs. No database, AI service, or backend is planned.
+## Temporary content and future applications
 
-## Routes and persistence
+`ApplicationPlaceholder` reads each application's registry name, icon, and development message. These are infrastructure verification placeholders only; no application features are implemented. Replace its use in WindowManager with real content in the relevant phase, preserving AppWindow and its lifetime key.
 
-Add React Router when Phase 7 introduces project reports. Prefer a hash router with desktop `/` and report `/projects/:slug` routes (URLs such as `/#/projects/example`). GitHub Pages serves the root HTML for these URLs, so reloads work without server rewrites. Validate unknown slugs and provide a way back to the desktop.
+Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` will provide shared project, education, skill, and contact facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
 
-Keep the desktop/controller mounted above the route content so navigation does not discard window state. URLs describe shareable content, while in-memory controller state describes window layout and focus. Browser refresh may reset window layout initially; add local persistence only if later requirements call for it.
+## Planned routes and incremental delivery
 
-## Incremental delivery
+Add React Router in Phase 7 for reports, preferably hash URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
 
-Each phase adds a narrow capability to the existing shell. Reserved folders establish ownership without placeholder components. Shared abstractions follow demonstrated needs; dependencies beyond the requested foundations are deferred. Phase-specific manual checks plus TypeScript, linting, and production builds keep each step independently reviewable.
+No backend, database, AI service, or deployment workflow is added. Each phase remains independently reviewable with TypeScript, ESLint, production builds, relevant browser checks, and focused lifecycle tests.

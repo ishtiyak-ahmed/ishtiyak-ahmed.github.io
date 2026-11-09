@@ -1,0 +1,87 @@
+/* All windows share one isolated stacking context below fixed desktop chrome. */
+.window-workspace {
+  position: fixed;
+  z-index: var(--layer-windows);
+  isolation: isolate;
+  inset: calc(var(--menu-region) + 16px) 24px calc(var(--dock-region) + 8px);
+  pointer-events: none;
+}
+.window-position { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.app-window {
+  width: min(var(--window-width), 100%);
+  height: var(--window-height);
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 15px;
+  background: var(--color-window);
+  color: var(--color-primary);
+  box-shadow: 0 12px 36px rgb(0 0 0 / 20%);
+  overflow: hidden;
+  pointer-events: auto;
+  transition: width 200ms ease, height 200ms ease, border-color 180ms ease, box-shadow 180ms ease, visibility 0s;
+}
+.app-window[data-active="true"] { border-color: #56565e; box-shadow: 0 18px 48px rgb(0 0 0 / 28%); }
+.app-window:focus { outline: none; }
+.app-window:focus-visible { outline: 2px solid var(--color-finder); outline-offset: 3px; }
+.app-window[data-minimized="true"] { visibility: hidden; pointer-events: none; transition-delay: 0s, 0s, 0s, 0s, 180ms; }
+.app-window[inert] { pointer-events: none; }
+.app-window__titlebar {
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border-bottom: 1px solid rgb(255 255 255 / 5%);
+  background: #29292e;
+  padding-inline: 10px;
+}
+.app-window__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 220px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-secondary);
+  pointer-events: none;
+}
+.window-controls { display: flex; gap: 2px; }
+.window-control { width: 30px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
+.window-control span { width: 13px; height: 13px; display: grid; place-items: center; border-radius: 50%; }
+.window-control--close span { background: #ed6a62; color: #541915; }
+.window-control--minimize span { background: #e5b950; color: #543e0b; }
+.window-control--expand span { background: #68b878; color: #153e1e; }
+.window-control svg { width: 9px; height: 9px; stroke-width: 2.5; opacity: 0; }
+.window-control:disabled { cursor: default; }
+.window-control:disabled span { background: var(--color-border); }
+.window-controls:hover .window-control:not(:disabled) svg,
+.window-control:focus-visible svg { opacity: 1; }
+.window-control:not(:disabled):hover { background: rgb(255 255 255 / 5%); }
+.window-control:focus-visible { outline: 2px solid var(--color-finder); outline-offset: 0; }
+.app-window__content { overflow: auto; min-height: 0; flex: 1 1 auto; overscroll-behavior: contain; }
+.application-placeholder { padding: 48px 28px; text-align: center; }
+.application-placeholder .dock-icon { width: 38px; height: 38px; border-radius: 10px; margin-inline: auto; }
+.application-placeholder .dock-icon svg { width: 21px; height: 21px; }
+.application-placeholder h2 { font-size: 20px; font-weight: 500; letter-spacing: -0.025em; margin: 20px 0 8px; }
+.application-placeholder p { color: var(--color-secondary); font-size: 13px; line-height: 1.6; max-width: 320px; margin: 0 auto; }
+@media (max-width: 700px) {
+  .window-workspace { left: 8px; right: 8px; top: calc(var(--menu-region) + 10px); }
+  .app-window__titlebar { min-height: 48px; padding-inline: 4px; }
+  .app-window__title { position: static; transform: none; max-width: none; min-width: 0; padding: 0 8px; margin-left: auto; font-size: 11px; }
+  .window-control { width: 44px; height: 44px; }
+  .window-controls { flex-shrink: 0; gap: 0; }
+  .window-control svg { opacity: 1; }
+  .application-placeholder { padding: 32px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-window { transition: none; }
+  .app-window[data-minimized="true"] { transition-delay: 0s; }
+}
