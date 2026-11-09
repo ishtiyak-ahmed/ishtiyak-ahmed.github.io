@@ -1,10 +1,12 @@
 # Architecture
 
-## Implemented in Phase 0
+## Implemented through Phase 1
 
-`src/main.tsx` mounts React in Strict Mode and imports `styles/global.css`. `app/App.tsx` renders only the initialization message. Vite integrates React and Tailwind, using `/` as the asset base. Global theme variables expose the requested graphite palette as both CSS variables and Tailwind utilities. System sans-serif and monospace stacks avoid font downloads.
+`src/main.tsx` mounts React in Strict Mode and imports `styles/global.css`. `app/App.tsx` renders `components/desktop/Desktop.tsx`. The desktop composes `DesktopHero`, `PhotoWidget`, `CurrentlyWidget`, and `QuickLinksWidget`, with typed configuration in `data/desktop.ts`. `components/desktop/desktop.css` defines a responsive grid, compact upper-left widgets, a centered introduction, and empty menu/dock space. No application state is needed. Vite integrates React and Tailwind, using `/` as the asset base. Global theme variables expose the requested graphite palette as both CSS variables and Tailwind utilities. System sans-serif and monospace stacks avoid font downloads.
 
-Everything below is a plan. No controller, window system, router, application registry, or content model is implemented yet.
+Currently and Quick Links are data-driven. The photo accepts a source, alt text, and crop position; without a source it renders a neutral placeholder. Lucide supplies general icons; two local SVGs supply brand marks not present in Lucide. Missing link destinations render disabled, without anchors.
+
+Everything below is a plan. No controller, window system, router, or application registry is implemented yet.
 
 ## Persistent desktop and applications
 
