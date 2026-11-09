@@ -1,0 +1,17 @@
+.education-app { padding: 30px 28px 24px; }
+.education-app__identity { text-align: center; }
+.education-app__logo, .education-app__logo-placeholder { width: 60px; height: 60px; margin: 0 auto 18px; }
+.education-app__logo { display: block; object-fit: contain; }
+.education-app__logo-placeholder { display: grid; place-items: center; border-radius: 15px; background: var(--color-elevated); color: var(--color-secondary); }
+.education-app h2 { margin: 0; font-size: 23px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.25; }
+.education-app__identity p { margin: 6px 0 0; color: var(--color-secondary); font-size: 12px; }
+.education-app__details { margin: 28px 0 0; }
+.education-app__row { display: grid; grid-template-columns: 126px minmax(0, 1fr); gap: 16px; padding: 15px 0; border-top: 1px solid rgb(255 255 255 / 6%); font-size: 12px; line-height: 1.65; }
+.education-app dt { color: var(--color-secondary); }
+.education-app dd { margin: 0; }
+.education-app dd span { display: block; }
+@media (max-width: 450px) {
+  .education-app { padding: 24px 20px 18px; }
+  .education-app h2 { font-size: 21px; }
+  .education-app__row { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
+}

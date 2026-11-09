@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'motion/react'
 import { useWindowManager } from '../../hooks/useWindowManager'
 import { AppWindow } from './AppWindow'
-import { ApplicationPlaceholder } from './ApplicationPlaceholder'
+import { ApplicationContent } from '../../apps/ApplicationContent'
 import './windows.css'
 
 export function WindowManager() {
@@ -15,7 +15,7 @@ export function WindowManager() {
         {state.windows.toSorted((a, b) => a.instanceId - b.instanceId).map((window) => (
           <AppWindow key={window.instanceId} window={window}
             layer={state.windows.findIndex((entry) => entry.appId === window.appId) + 1}>
-            <ApplicationPlaceholder appId={window.appId} />
+            <ApplicationContent appId={window.appId} />
           </AppWindow>
         ))}
       </AnimatePresence>

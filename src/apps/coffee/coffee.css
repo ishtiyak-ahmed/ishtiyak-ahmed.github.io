@@ -1,0 +1,24 @@
+.coffee-app { padding: 26px 24px 20px; }
+.coffee-app__intro { text-align: center; }
+.coffee-app__cup { color: var(--color-coffee); margin: 0 auto 14px; }
+.coffee-app h2 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 500; letter-spacing: -0.04em; }
+.coffee-app__intro p { max-width: 320px; margin: 10px auto 22px; font-size: 13px; line-height: 1.7; color: var(--color-secondary); }
+.coffee-app__rows { list-style: none; padding: 0; margin: 0; border-top: 1px solid rgb(255 255 255 / 6%); }
+.coffee-app__rows li { border-bottom: 1px solid rgb(255 255 255 / 6%); }
+.contact-row { display: flex; gap: 13px; align-items: center; width: 100%; min-height: 56px; padding: 10px 6px; border: 0; border-radius: 7px; background: transparent; color: var(--color-primary); text-decoration: none; text-align: left; font: inherit; }
+button.contact-row:not(:disabled) { cursor: pointer; }
+.contact-row__icon { flex-shrink: 0; color: var(--color-coffee); }
+.contact-row__text { min-width: 0; flex: 1; }
+.contact-row__label { display: block; font-size: 12px; font-weight: 500; line-height: 1.4; }
+.contact-row__description { display: block; font-size: 11px; line-height: 1.6; color: var(--color-secondary); overflow-wrap: anywhere; user-select: text; }
+.contact-row__action { color: var(--color-secondary); flex-shrink: 0; }
+.contact-row:is(a, button:not(:disabled)):hover { background: rgb(214 161 128 / 5%); }
+.contact-row:focus-visible { outline: 2px solid var(--color-coffee); outline-offset: -2px; }
+.contact-row--unavailable, .contact-row:disabled { color: var(--color-secondary); cursor: default; }
+.contact-row--unavailable .contact-row__icon, .contact-row:disabled .contact-row__icon { color: var(--color-muted); }
+.coffee-app__copy-hint { display: block; margin: -4px 6px 8px 37px; color: var(--color-secondary); font-size: 10px; }
+.coffee-app__feedback { margin: 10px 0 0; min-height: 16px; font-size: 11px; line-height: 1.5; color: var(--color-secondary); }
+@media (max-width: 450px) {
+  .coffee-app { padding: 22px 18px 18px; }
+  .coffee-app h2 { font-size: 22px; }
+}

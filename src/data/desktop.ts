@@ -1,10 +1,4 @@
-export type QuickLinkId = 'resume' | 'linkedin' | 'github' | 'email'
-
-export interface QuickLink {
-  id: QuickLinkId
-  label: string
-  href: string | null
-}
+import { quickLinks } from './contact.ts'
 
 export interface DesktopPhoto {
   src: string | null
@@ -28,11 +22,5 @@ export const desktopContent = {
     alt: 'Personal photograph placeholder',
     objectPosition: 'center',
   } satisfies DesktopPhoto,
-  // Existing destinations come from the previous portfolio. Resume awaits a current file.
-  quickLinks: [
-    { id: 'resume', label: 'Resume', href: null },
-    { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/ishtiyak-ahmed-598311396/' },
-    { id: 'github', label: 'GitHub', href: 'https://github.com/ishtiyak-ahmed' },
-    { id: 'email', label: 'Email', href: 'mailto:ishtiyak.ahmed@mail.utoronto.ca' },
-  ] satisfies QuickLink[],
+  quickLinks,
 }

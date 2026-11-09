@@ -1,10 +1,10 @@
 import { FileText, Mail } from 'lucide-react'
 import { GitHubIcon, LinkedInIcon } from '../../ui/BrandIcons'
-import type { QuickLink } from '../../../data/desktop'
+import type { ContactLink } from '../../../data/contact'
 
 const icons = { resume: FileText, linkedin: LinkedInIcon, github: GitHubIcon, email: Mail }
 
-export function QuickLinksWidget({ links }: { links: QuickLink[] }) {
+export function QuickLinksWidget({ links }: { links: ContactLink[] }) {
   return (
     <nav className="quick-links widget-surface" aria-label="Quick links">
       <ul>

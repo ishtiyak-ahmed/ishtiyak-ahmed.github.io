@@ -12,7 +12,7 @@ export type ApplicationIcon =
 export interface WindowDefinition {
   normal: { width: number; height: number | 'content' }
   expanded?: { width: number; height: number }
-  placeholder: { message: string }
+  placeholder?: { message: string }
 }
 
 export interface ApplicationDefinition {
@@ -37,7 +37,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'terminal', tone: 'terminal' },
   },
   education: {
-    window: { normal: { width: 420, height: 'content' }, placeholder: { message: 'Application implementation scheduled for Phase 4.' } },
+    window: { normal: { width: 420, height: 'content' } },
     id: 'education', name: 'Education', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'graduation', tone: 'academic' },
   },
@@ -52,7 +52,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'code', tone: 'purple' },
   },
   contact: {
-    window: { normal: { width: 440, height: 'content' }, placeholder: { message: 'Application implementation scheduled for Phase 4.' } },
+    window: { normal: { width: 440, height: 'content' } },
     id: 'contact', name: "Let's Grab a Coffee", launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'coffee', tone: 'coffee' },
   },

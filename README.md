@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 3 adds a lightweight window manager to the persistent desktop, menu bar, and six-icon dock. Real application content remains scheduled for later phases.
+A macOS-inspired personal portfolio built incrementally. Phase 4 adds the compact Education and Let's Grab a Coffee applications to the persistent desktop and shared window manager. Other application contents remain scheduled for later phases.
 
 ## Stack
 
@@ -20,7 +20,7 @@ Open the URL printed by Vite. System fonts provide a native sans-serif UI and a 
 ```sh
 npm run typecheck  # Strict TypeScript checks for app and Vite config
 npm run lint       # ESLint
-npm test           # Dependency-free window lifecycle tests
+npm test           # Dependency-free lifecycle, configuration, and clipboard tests
 npm run build      # TypeScript checks, then production output in dist/
 npm run preview    # Serve the production build locally
 ```
@@ -40,10 +40,10 @@ src/
   apps/
     finder/              Future project explorer
     jarvis/              Future deterministic portfolio terminal
-    education/           Future education application
+    education/           Education information panel
     skills/              Future categorized skills application
-    coffee/              Future coffee-themed contact application
-  data/                  Typed desktop content, destinations, application registry
+    coffee/              Coffee-themed contact application
+  data/                  Desktop, education, canonical contacts, application registry
   hooks/                 useWindowManager controller hook
   styles/global.css      Tailwind import, tokens, global base styles
   assets/{icons,images}/  Future bundled assets
@@ -73,7 +73,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–2 are checkpointed locally; Phase 3 changes remain uncommitted for review. Publishing belongs to Phase 9.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–3 are checkpointed locally; Phase 4 changes remain uncommitted for review. Publishing belongs to Phase 9.
 
 Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
 
@@ -85,9 +85,9 @@ At initialization, `npm audit` reported 10 moderate development-tooling findings
 
 ## Desktop content and layout
 
-Edit `src/data/desktop.ts` to update the introduction, Currently copy, photo, or Quick Links. Photo is a neutral square placeholder: import a real asset, set `photo.src`, supply descriptive `photo.alt`, and adjust `objectPosition` for the crop. No generated portrait is used.
+Edit `src/data/desktop.ts` to update the introduction, Currently copy, or photo. Quick Links derive from canonical contact configuration in `src/data/contact.ts`. Photo is a neutral square placeholder: import a real asset, set `photo.src`, supply descriptive `photo.alt`, and adjust `objectPosition` for the crop. No generated portrait is used.
 
-Quick Links use the LinkedIn, GitHub, and email destinations from the previous portfolio. Resume is deliberately disabled (`href: null`) until a current file is supplied. Place the file in `public/` and set its root-relative URL when ready. Links provide hover and keyboard-focus labels; unavailable actions have no destination or click behavior.
+Quick Links use the LinkedIn, GitHub, and email destinations from the previous portfolio. Resume is deliberately disabled (`href: null`) until a current file is supplied. Place the current file in `public/` and set `contactDetails.resume` to its root-relative URL when ready; both Quick Links and Coffee will use it. Links provide hover and keyboard-focus labels; unavailable actions have no destination or click behavior.
 
 `components/desktop/desktop.css` controls the composition. The photo and Currently widgets align at the upper left, with a 48px Quick Links strip directly below the photo. A large introduction is horizontally centered below the widget band, with reserved 40px menu and 120px dock regions (96px dock region on narrow screens). Narrow screens use flowing grid rows and may scroll vertically for legibility; there are no extra portfolio sections. No animation, state system, or new dependency was added in Phase 1.
 
@@ -107,6 +107,14 @@ The React reducer/context lives in `src/app/`, with `useWindowManager` exposing 
 
 Red closes and resets content on the next launch. Yellow hides the window without unmounting its content. Green toggles predefined normal/expanded sizes for Projects, Beyond the Data, and Technical Skills; it is disabled for Education and Let's Grab a Coffee. Expanded state survives minimizing and Home. Windows are centered within the usable area between the menu bar and dock, constrained to the viewport, and scroll internally as needed. There is no dragging, manual resizing, browser fullscreen, or focus trap.
 
-Each window currently contains only its registry name, icon, and neutral development message. Replace these placeholders during the scheduled application phases. No real application content is implemented in Phase 3. Session/window state resets on page reload.
+Education and Let's Grab a Coffee now render real content through `apps/ApplicationContent.tsx`. Projects, Technical Skills, and Beyond the Data retain their neutral development placeholders. Session/window state resets on page reload.
 
-`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify eight lifecycle scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify the eight original lifecycle scenarios plus seven education/contact/clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+
+## Education and Coffee configuration
+
+`src/data/education.ts` contains University of Toronto, Mississauga Campus, the Applied Statistics major, Computer Science and Geospatial Data Science minors, graduation, and logo fields. No public graduation date is confirmed: `expectedGraduation: null` displays **To be confirmed**. `logo: null` uses a clearly labeled generic academic icon, not an institutional mark. Supply a verified official logo asset with descriptive alt text when available.
+
+`src/data/contact.ts` is the single source of truth for email, LinkedIn, GitHub, résumé, and phone. It derives the four homepage Quick Links and Coffee's ordered links. Email uses `mailto:`; LinkedIn and GitHub open new tabs with `noopener noreferrer` and accessible new-tab labels. Coffee's current Resume and Phone rows are disabled with visible explanations. No current résumé PDF or phone number is configured; no historical number or invented value has been substituted.
+
+Once a verified phone is supplied as `{ display, copyValue }`, the existing copy button uses the browser Clipboard API with polite success/error feedback. Clipboard success, rejection, unsupported access, and missing values are covered by unit tests; live browser copying is unavailable while the configured phone is null. The two applications keep their existing content-driven 420px/440px presets and disabled expansion, with internal scrolling only when needed. AppWindow and its controls did not require changes.

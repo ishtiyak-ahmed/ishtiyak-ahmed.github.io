@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Phase 3
+## Implemented through Phase 4
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain the Phase 1 layout and typed configuration in `data/desktop.ts`. No full-page navigation occurs.
 
@@ -36,11 +36,17 @@ Dock's shared `(ApplicationId) => void` launch callback now calls `openApp`; Hom
 
 DockIcon still supports Lucide glyph compositions or a replaceable custom asset. Existing 180ms hover/focus feedback, labels, Escape dismissal, reduced-motion support, and small-screen targets are preserved.
 
-## Temporary content and future applications
+## Application content and shared data
 
-`ApplicationPlaceholder` reads each application's registry name, icon, and development message. These are infrastructure verification placeholders only; no application features are implemented. Replace its use in WindowManager with real content in the relevant phase, preserving AppWindow and its lifetime key.
+`apps/ApplicationContent.tsx` resolves Education and Let's Grab a Coffee to their real application components; the other three window apps still use ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
 
-Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` will provide shared project, education, skill, and contact facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
+`data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is unconfirmed and displays “To be confirmed”; the logo is a generic academic placeholder until a verified official institutional mark is supplied. No historic graduation date is assumed to be approved public content.
+
+`data/contact.ts` centralizes verified destinations previously held in desktop.ts. Both Quick Links and Coffee reuse the same derived contact-link objects, with their respective required orders. Coffee uses semantic link rows for email and safe external profiles, an unavailable Resume row, and a disabled Phone button while details are pending. ContactConfiguration has a nullable current résumé URL and nullable phone `{ display, copyValue }`.
+
+Coffee's local copy feedback survives minimizing, resets on close/remount, and reports success only after Clipboard API resolution. The small injectable `copyPhoneNumber` helper handles denied/unsupported access and missing details without throwing. No live phone number or current résumé file is configured, so those actions remain unavailable. Copy outcomes are unit-tested with synthetic values; no phone number is fabricated. External links announce new-tab behavior and use `noopener noreferrer`.
+
+Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, Education summarizes education, Technical Skills groups technologies, Let's Grab a Coffee provides contact information, and Beyond the Data hosts JARVIS. Typed records in `data/` already supply education/contact facts and will later supply project/skill facts. Application-local state belongs inside each app and survives minimizing through the existing mount policy. Apps can use the same controller hook to open/focus other applications.
 
 ## Planned routes and incremental delivery
 
