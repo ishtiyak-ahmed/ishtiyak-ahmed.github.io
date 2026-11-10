@@ -6,6 +6,10 @@ import { MenuBar } from '../components/desktop/MenuBar'
 import { WindowManager } from '../components/windows/WindowManager'
 import { WindowManagerProvider } from './WindowManagerProvider'
 import { useWindowManager } from '../hooks/useWindowManager'
+import { useHashNavigation } from '../routing/hashNavigation'
+import { parsePortfolioRoute } from '../routing/projectRoutes'
+import { projects } from '../data/projects'
+import { ProjectReportPage } from '../reports/ProjectReportPage'
 
 function DesktopShell() {
   const desktopRef = useRef<HTMLElement>(null)
@@ -28,6 +32,18 @@ function DesktopShell() {
   )
 }
 
+function RoutedPortfolio() {
+  const navigation = useHashNavigation()
+  const route = parsePortfolioRoute(navigation.hash)
+  const article = route.kind === 'report' || route.kind === 'unknown'
+  const project = route.kind === 'report' ? projects.find((entry) => entry.id === route.projectId) : undefined
+  return (
+    <>
+      <div hidden={article}><DesktopShell /></div>
+      {article && <ProjectReportPage key={navigation.hash} project={project} />}
+    </>
+  )
+}
 export function App() {
-  return <WindowManagerProvider><DesktopShell /></WindowManagerProvider>
+  return <WindowManagerProvider><RoutedPortfolio /></WindowManagerProvider>
 }

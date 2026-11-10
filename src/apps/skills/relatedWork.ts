@@ -5,7 +5,7 @@ import type { RelatedWorkReference, Skill } from '../../data/skills.ts'
 
 export interface RelatedWorkDestination extends RelatedWorkReference { label: string }
 
-// Future Finder/Experience phases supply a verified catalog and selection handler.
+// Verified catalogs supply relationships; the shared request API selects their stable IDs.
 // A window opening by itself is not a supported resource destination.
 export function resolveSkillWork(skill: Skill, catalog: readonly RelatedWorkDestination[]) {
   return (skill.relatedWork ?? []).flatMap((reference) => {

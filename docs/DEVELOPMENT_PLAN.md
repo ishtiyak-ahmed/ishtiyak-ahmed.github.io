@@ -21,7 +21,7 @@ Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both de
 
 The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 11; do not copy old deployment behavior into the rebuild.
 
-Phases 0–7 are implemented. Phases 0–6 have local checkpoint commits; Phase 6 was reviewed and checkpointed as `02619ad` before Phase 7. Phase 7 remains uncommitted for review; Phase 8 has not started.
+Phases 0–8 are implemented. Phases 0–7 have local checkpoint commits; Phase 7 was reviewed and checkpointed as `41a28f8` before Phase 8. Phase 8 remains uncommitted for review; Phase 9 has not started.
 
 ## Phase 3 verification
 
@@ -71,3 +71,13 @@ The 43 automated tests include the existing 30 and 13 Finder scenarios, with iso
 Production contains only the three confirmed project names. TTC's supplied case study is the sole resource (HTTP 200 verified); other folders show pending information. Before Phase 8, supply approved descriptions/reports and any verified repository, demo, documentation, or dashboard destinations. Add related skill mappings only when confirmed. Phase 8 will connect hash URLs to stable slugs using the existing resolver; a routing dependency is not assumed. No push, deployment, or Phase 7 commit is authorized.
 
 Final Phase 7 checks: strict TypeScript, ESLint, all 43 tests, and production build pass. Browser console contains no warnings/errors. The external TTC resource opens the real case study in a new tab. Production excludes test harnesses/fixture markers, and the source/public/build résumé hashes match.
+
+## Phase 8 acceptance and content boundaries
+
+Implemented the reusable report schema/template, explicit publication states, centralized safe resource handling, and GitHub Pages-compatible hash routes without dependencies. Finder remains an OS application; report resources open separate webpages in new tabs. TTC retains its existing external report. JavaFX and Tree have unavailable report states; no filler case studies, new portfolio projects, metrics, screenshots, or repository links are published.
+
+Supported routes are desktop `/#/`, Finder root `/#/projects`, known folder `/#/projects/:slug`, and report `/#/reports/:slug`. Folder URL changes use browser history; Back/Forward and refresh reapply stable project IDs in the existing single Finder instance. Transient actions do not create history. Unknown routes provide recovery; known unpublished reports show factual availability. Existing in-window Finder history and lifecycle remain intact.
+
+Acceptance covers strict TypeScript, ESLint, 54 automated tests (all original 43 preserved), and production build. New tests cover publication/data filtering, missing media/optional sections, URL helpers, route validation, single-instance synchronization, history writes, and source exclusion of fixtures. Browser verification checks actual internal report rendering/new-tab opening using an isolated fixture, real external TTC loading, direct links/refresh, Back/Forward, invalid recovery, cross-app requests, lifecycle, existing apps, and responsive Finder/report bounds at 1920×1080, 1440×900, 1280×800, 390×844, and 320×640.
+
+Before publication: obtain approved report prose and media for JavaFX/Tree, verified source/demo/documentation destinations, and confirmed skill/experience relationships. Add approved content to each existing project's report field; register real public media paths and rerun rendering/build checks. Unfinished reports remain unavailable. Final writing is separately reviewed; visual redesign remains Phase 10, final QA/deployment Phase 11. No Phase 8 commit, push, deployment, or Phase 9 work is authorized here.

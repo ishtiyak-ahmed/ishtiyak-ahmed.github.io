@@ -1,16 +1,16 @@
 import { useEffect, useLayoutEffect, useReducer, useRef } from 'react'
-import { ArrowLeft, ArrowRight, ArrowUpRight, ChartNoAxesCombined, ChevronRight, CodeXml, FileText, Folder, Globe, Grid2X2, List, Search, X } from 'lucide-react'
-import { PROJECTS_ROOT, projects, projectPath, resolveProjectLocation } from '../../data/projects'
-import type { Project, ProjectResourceType } from '../../data/projects'
+import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronRight, Folder, Link, Grid2X2, List, Search, X } from 'lucide-react'
+import { isReportPublished, projectHash, PROJECTS_ROOT, projects, projectPath, resolveProjectLocation } from '../../data/projects'
+import type { Project } from '../../data/projects'
 import type { ResourceRequest } from '../../app/windowState'
 import { finderItems, finderLocation, finderReducer, initialFinderState } from './finderState'
 import type { FinderAction, FinderItem, FinderState } from './finderState'
+import { resourcePresentation } from './resourcePresentation'
 import './finder.css'
 
-interface FinderAppProps { entries?: readonly Project[]; selectionRequest?: ResourceRequest }
-const resourceIcons: Record<ProjectResourceType, typeof FileText> = { report: FileText, source: CodeXml, demo: Globe, dashboard: ChartNoAxesCombined, documentation: FileText, 'case-study': Globe }
+interface FinderAppProps { entries?: readonly Project[]; selectionRequest?: ResourceRequest; onNavigate?: (location: string | null) => void }
 
-export function FinderApp({ entries = projects, selectionRequest }: FinderAppProps) {
+export function FinderApp({ entries = projects, selectionRequest, onNavigate }: FinderAppProps) {
   const [state, dispatch] = useReducer((current: FinderState, action: FinderAction) => finderReducer(current, action, entries), undefined, initialFinderState)
   const heading = useRef<HTMLHeadingElement>(null)
   const content = useRef<HTMLElement>(null)
@@ -39,7 +39,9 @@ export function FinderApp({ entries = projects, selectionRequest }: FinderAppPro
 
   function navigate(action: FinderAction) {
     focusHeading.current = true
+    const next = finderReducer(state, action, entries)
     dispatch(action)
+    if (next !== state) onNavigate?.(finderLocation(next))
   }
   function open(item: FinderItem) {
     if (item.kind === 'folder') navigate({ type: 'navigate', location: item.project.id })
@@ -77,24 +79,25 @@ export function FinderApp({ entries = projects, selectionRequest }: FinderAppPro
             <header className="finder-content__header">
               <h2 id="finder-content-heading" ref={heading} tabIndex={-1}>{searching ? 'Search results' : project?.title ?? 'Projects'}</h2>
               {searching ? <p>Searching all projects · {items.length} {items.length === 1 ? 'result' : 'results'}</p> : project && <p>{project.shortDescription ?? 'Project details will be added during the content-review phase.'}</p>}
+              {!searching && project && !isReportPublished(project) && <p>Project report not yet published.</p>}
             </header>
             {!!items.length && <ul className={`finder-items finder-items--${state.view}`} aria-label={searching || !project ? 'Project folders' : 'Project resources'}>
               {items.map((item) => {
-                const Icon = item.kind === 'folder' ? Folder : resourceIcons[item.resource.type]
+                const Icon = item.kind === 'folder' ? Folder : resourcePresentation[item.resource.type].icon
                 return <li key={item.id} className="finder-item" data-selected={state.selection === item.id}>
                   <button type="button" className="finder-item__select" aria-label={item.title} aria-pressed={state.selection === item.id}
                     onClick={() => dispatch({ type: 'select', id: item.id })} onDoubleClick={() => open(item)}
                     onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); open(item) } }}>
                     <Icon className={item.kind === 'folder' ? 'finder-folder-icon' : ''} size={state.view === 'grid' ? 32 : 20} aria-hidden="true" />
-                    <span><span className="finder-item__title">{item.title}</span>{item.kind === 'folder' && item.project.category && <span className="finder-item__metadata">{item.project.category}</span>}{item.kind === 'resource' && item.resource.description && <span className="finder-item__metadata">{item.resource.description}</span>}</span>
+                    <span><span className="finder-item__title">{item.title}</span>{item.kind === 'folder' && item.project.category && <span className="finder-item__metadata">{item.project.category}</span>}{item.kind === 'resource' && <span className="finder-item__metadata">{item.resource.description ?? resourcePresentation[item.resource.type].label}</span>}</span>
                   </button>
-                  {item.kind === 'folder' ? <button type="button" className="finder-item__open" aria-label={`Open ${item.title}`} onClick={() => open(item)}><ChevronRight size={16} aria-hidden="true" /></button> : <a className="finder-item__open" href={item.resource.href} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.title} (opens in a new tab)`}><ArrowUpRight size={16} aria-hidden="true" /></a>}
+                  {item.kind === 'folder' ? <button type="button" className="finder-item__open" aria-label={`Open ${item.title}`} onClick={() => open(item)}><ChevronRight size={16} aria-hidden="true" /></button> : <a className="finder-item__open" href={item.resource.href} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.title} (opens in a new tab)`}>{item.resource.destination === 'external' ? <ArrowUpRight size={16} aria-hidden="true" /> : <Link size={16} aria-hidden="true" />}</a>}
                 </li>
               })}
             </ul>}
             {!items.length && <p className="finder-empty" role="status">{searching ? 'No projects match your search.' : project ? 'No verified resource links have been added yet.' : 'No projects have been added yet.'}</p>}
           </section>
-          <footer className="finder-status"><span title={projectPath(location, entries)}>{searching ? 'All projects' : projectPath(location, entries)}</span><span>{items.length} {items.length === 1 ? 'item' : 'items'}</span></footer>
+          <footer className="finder-status">{onNavigate && <a href={projectHash(location, entries)} aria-label="Shareable project link">Project link</a>}<span title={projectPath(location, entries)}>{searching ? 'All projects' : projectPath(location, entries)}</span><span>{items.length} {items.length === 1 ? 'item' : 'items'}</span></footer>
         </div>
       </div>
       <span className="sr-only">Project root: {PROJECTS_ROOT}</span>

@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Phase 7
+## Implemented through Phase 8
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain typed configuration; Phase 7 positions Currently at upper-right and leaves the photo/Quick Links upper-left in `data/desktop.ts`. No full-page navigation occurs.
 
@@ -50,7 +50,7 @@ Future content belongs in `apps/`: Projects uses the Finder-inspired explorer, E
 
 ## Planned routes and incremental delivery
 
-In Phase 8, implement a small hash-route adapter for reports, using URLs such as `/#/projects/example` that survive GitHub Pages reloads without server rewrites. Keep the desktop/controller mounted above routed content. URLs describe shareable content; in-memory window state describes focus, visibility, and expansion. Reload currently starts a fresh desktop session.
+Phase 8 implements a small hash-route adapter for Finder folders and reports. URLs such as `/#/projects/ttc-delay-patterns` survive GitHub Pages reloads without server rewrites. The desktop/controller stays mounted; article routes hide it. URLs describe shareable content, while in-memory window state describes focus, visibility, expansion, and transient Finder state. Reload starts a fresh desktop session and applies the requested route.
 
 No backend, database, AI service, or deployment workflow is added. Each phase remains independently reviewable with TypeScript, ESLint, production builds, relevant browser checks, and focused lifecycle tests.
 
@@ -96,6 +96,20 @@ FinderApp renders a compact Projects-only sidebar, toolbar, breadcrumbs, and sha
 
 ApplicationContent passes existing `{ resourceId, requestId }` requests to Finder. `openApp('projects', idOrLogicalPath)` resolves a known project and navigates within the existing instance. Ordinary restoration keeps the request object and therefore local navigation intact; explicit repeated requests get new IDs. Invalid requests do not corrupt state. Close removes the lifetime and local reducer; reopen defaults to root/list/no selection/no search. Related-work resolution requires real project IDs plus the existing verified catalog/callback gates. No unverified relationships are rendered.
 
-Routing remains deferred. Phase 8 can interpret `/#/projects/:slug` through the same resolver and request boundary, without replacing the desktop or requiring GitHub Pages rewrites. Decide whether a router is needed then; none is required for current in-window history. Reports, descriptions, repositories, screenshots, and additional resource links await verified content. Phase 10 owns the comprehensive visual redesign and motion polish; Phase 11 owns final content, QA, and separately authorized deployment.
+Phase 8 interprets `/#/projects/:slug` through the same stable IDs and request boundary, without replacing the desktop or requiring GitHub Pages rewrites. No routing dependency is needed. Reports, descriptions, repositories, screenshots, and additional resource links await verified content. Phase 10 owns the comprehensive visual redesign and motion polish; Phase 11 owns final content, QA, and separately authorized deployment.
 
 The Finder browser harness uses isolated fixtures and existing shell/window components. Automated coverage includes data/resource validation, navigation/selection/search, request handling, and lifecycle. Production output must exclude test pages and fixture markers.
+
+## Phase 8 reports, routes, and browser history
+
+The optional Project.report union owns publication state: unavailable, published-external with a safe verified HTTPS URL, or published-internal with structured ReportContent. Internal content inherits project identity; optional title/summary/technical metadata and typed text/list/code/image section blocks stay separate from ProjectReportPage. Content filtering removes empty headings/blocks, duplicate section IDs, and media outside the actual public-asset allowlist. React escapes prose/code; no raw HTML or Markdown parser is introduced. Image load failures have an accessible text fallback. Only populated valid internal reports produce internal resources. External report resources must match the declared publication destination.
+
+`routing/projectRoutes.ts` parses known hash routes and resolves slugs against the registry. Unknown/malformed slugs yield an explicit recovery page, never an unrelated project. Known unpublished report routes show availability information. Known external report routes link to the existing site. The template renders actual internal content only when present; no production internal reports currently exist. TTC remains external; JavaFX/Tree remain unavailable.
+
+`routing/hashNavigation.ts` exposes a small useSyncExternalStore snapshot and listens to hashchange/popstate. Programmatic pushState writes notify subscribers explicitly; duplicate hash/popstate events are suppressed. Snapshots tag browser navigation versus app-origin writes so the controller never echoes a local folder change into another selection request. `browserHistory.ts` isolates the small history-writing contract for tests.
+
+WindowManagerProvider applies initial and browser-origin folder routes via the existing resource-request API, with a revision guard for Strict Mode. It retains the latest Finder location for ordinary dock restoration; this is URL coordination, not a second Finder reducer. Finder retains its own history/search/view/selection and reports user navigation through the optional navigateProject callback. App-origin open requests validate IDs/logical paths and write canonical hashes. Invalid requests do not launch or mutate Finder. Local folder changes add browser entries; local history remains independent of browser history. Selection/search/view/expand do not write entries. Home pushes desktop; close/minimize replace a current Finder hash with desktop. Closing still resets the instance and next dock launch starts at root.
+
+RoutedPortfolio leaves DesktopShell mounted and hides it while showing report/error content. Report route headings receive focus, and report section buttons scroll/focus without altering the route hash. Resource anchors open separate tabs with safe rel values; internal report destinations derive from the registry's slug. Shareable project links and future JARVIS commands reuse the same helpers. Skills now passes the verified stable resource ID to openApp; no production relationships are invented.
+
+To add a reviewed report, populate the existing project's report field and allowlist real media; do not create a second project catalog. Fixtures, fake claims, and placeholder destinations stay under tests. Production checks scan generated HTML/JS and verify test pages/assets are excluded. No new dependencies, backend, deployment, or global redesign are introduced.

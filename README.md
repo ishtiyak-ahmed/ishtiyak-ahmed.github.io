@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 7 adds a functioning Projects Finder and moves Currently beneath the upper-right clock. Experience shows one confirmed role; detailed project and experience wording remains pending review.
+A macOS-inspired personal portfolio built incrementally. Phase 8 adds structured report infrastructure, publication-aware resources, and shareable project navigation. Experience shows one confirmed role; detailed project and experience wording remains pending review.
 
 ## Stack
 
@@ -77,9 +77,9 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–6 are checkpointed locally (Phase 6: `02619ad`). Phase 7 remains uncommitted for review. Publishing belongs to Phase 11.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–7 are checkpointed locally (Phase 7: `41a28f8`). Phase 8 remains uncommitted for review. Publishing belongs to Phase 11.
 
-Routing is deferred until project reports need shareable URLs. The planned hash routing strategy avoids GitHub Pages deep-link 404s without a server or fallback script.
+Hash routing supports shareable Finder folders and report addresses without GitHub Pages rewrites, a server, or a routing dependency.
 
 ## Tooling notes
 
@@ -113,7 +113,7 @@ Red closes and resets content on the next launch. Yellow hides the window withou
 
 Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects render real content through `apps/ApplicationContent.tsx`. Beyond the Data retains a neutral development placeholder. Session/window state resets on page reload.
 
-`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 43 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 54 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
 
 ## Education and Coffee configuration
 
@@ -141,11 +141,11 @@ Future related navigation can call `openApp('experience', roleId)`. The optional
 
 Fictional fixtures live exclusively under `tests/`. With Vite running, `/tests/browser/experience.html` exercises multiple roles; `?empty=1` checks empty data, and `?many=1` checks independent history scrolling. These test-only pages and data are not imported into the production entry or included in `dist/`. They are never shown in the live portfolio.
 
-Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 7 is ready for review; nothing is pushed or deployed.
+Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 8 is ready for review; nothing is pushed or deployed.
 
 ## Projects Finder
 
-`src/data/projects.ts` owns stable IDs/slugs, titles, optional descriptions/category/technologies, folder icon, status, and typed resources. Each resource has a stable ID, title, type, destination (`external` or `local`), href, and optional description. Only valid destinations render: external URLs require HTTPS without credentials; local files must be explicitly listed in `projectAssetPaths` and exist in public assets. No local project assets are registered yet.
+`src/data/projects.ts` owns stable IDs/slugs, titles, optional descriptions/category/technologies, folder icon, status, and typed resources. Each resource has a stable ID, title, type, destination (`external`, `local`, or published `internal` report), href, and optional description. Only valid destinations render: external URLs require HTTPS without credentials; local files must be explicitly listed in `projectAssetPaths` and exist in public assets. No local project assets are registered yet.
 
 The three confirmed folders are TTC Delay Patterns, JavaFX Paint Editor, and Tree-Based Data Visualizer. Only TTC has a configured external case study, https://ttc-delay-patterns.vercel.app (HTTP 200 verified). Other folders show concise pending-content information, without fictional files, repositories, metrics, or downloads. Safe external links announce a new tab and use `noopener noreferrer`.
 
@@ -153,6 +153,20 @@ Finder uses one AppWindow. Its local reducer stores root/project history, histor
 
 `openApp('projects', projectIdOrPath)` opens/restores/focuses the existing instance at a valid project. Invalid requests leave Finder state intact. Skills related-work resolution validates real project IDs and still requires verified catalog relationships and a selection callback; no production relationships have been invented. Future JARVIS commands can reuse this registry.
 
-Phase 8 will map shareable hash URLs such as `/#/projects/ttc-delay-patterns` to this same slug resolver, keeping the desktop mounted and avoiding GitHub Pages server rewrites. No router dependency or browser deep-link behavior is introduced in Phase 7. Approved descriptions, final reports, repository/demo/documentation URLs, and verified skill relationships remain pending. Visual redesign is deliberately deferred to Phase 10.
+Phase 8 maps shareable hash URLs such as `/#/projects/ttc-delay-patterns` to stable project IDs, keeping the desktop mounted and avoiding GitHub Pages server rewrites. Approved descriptions, final reports, repository/demo/documentation URLs, and verified skill relationships remain pending. Visual redesign is deliberately deferred to Phase 10.
 
 Tests use isolated fixtures under `tests/fixtures/` and `/tests/browser/finder.html`; those fictional records are excluded from production. Phase 7 checks cover selection/opening, history, search, view switching, missing/invalid resources, cross-app requests, and lifecycle reset/preservation.
+
+## Reports and shareable navigation (Phase 8)
+
+`src/data/reportModel.ts` defines report publication as `unavailable`, `published-external` (verified HTTPS href), or `published-internal` (approved structured content). Each report belongs to its existing Project record, inheriting its stable ID/title. Content supports optional title/summary, technical metadata, and sections with stable IDs, headings, and text/list/code/image blocks. Empty sections, duplicate/invalid section IDs, and unavailable media are omitted. Images require descriptive alt text and an actual asset in `projectAssetPaths`; runtime image failures show a readable fallback.
+
+`src/reports/ProjectReportPage.tsx` renders a separate article, not an OS window, with section navigation when useful, safe resource links, route focus, and a return-to-project link. TTC remains a published external report at its existing website. JavaFX Paint Editor and Tree-Based Data Visualizer explicitly remain unavailable; no internal production report is published. Visiting their report addresses displays a factual unavailable state, while unknown addresses show recovery to the desktop. TTC's report address offers its existing external destination without copying its content.
+
+Supported routes: `/#/` (desktop), `/#/projects` (Finder root), `/#/projects/:slug` (Finder folder), and `/#/reports/:slug` (report or availability state). Direct loads and refresh restore the requested folder. Browser Back/Forward sends a new selection request to the same Finder instance; local Finder Back/Forward continues using its own folder history. Folder navigation writes browser history, while search, selection, view mode, and expansion do not. Home writes the desktop route; closing/minimizing Finder replaces the current folder route with desktop without adding a transient history entry. Ordinary dock restoration preserves Finder state and restores its folder URL. The desktop stays mounted but hidden on report/error pages.
+
+Shared helpers in `data/projects.ts` include `projectHash`, `shareableProjectUrl`, `resolveProjectLocation`, `isReportPublished`, and `resolveReportDestination`. `projectResources` centralizes validation, excludes unpublished report links, and derives a report resource only for a valid published destination. Finder's Project link can be copied using normal browser link actions. External and internal report resources both open new tabs with `noopener noreferrer`. Source/demo/dashboard/documentation links require explicitly verified configuration; no repository links were added. Skills passes stable resource IDs through `openApp`; relationship catalogs remain empty until approved.
+
+To publish an approved internal report later: add its reviewed content to the owning Project's `report` field with `published-internal`, give sections stable unique IDs, add actual public media to `projectAssetPaths`, and run data/rendering/production checks. A valid report resource and hash destination are then derived automatically. For an external report, set `published-external` with the verified destination instead. Keep unfinished work `unavailable`. The test-only `/tests/browser/reports.html` validates the template using fictional fixtures and a local diagram; production excludes both.
+
+Outstanding: approved JavaFX/Tree report content, introductions, engineering details, outcomes, screenshots/diagrams, and independently verified repository/demo resources. TTC's full report is not duplicated. Final writing remains a separate review; Phase 9 has not started, and visual redesign remains Phase 10.

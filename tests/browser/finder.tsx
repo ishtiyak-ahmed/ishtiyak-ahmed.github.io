@@ -24,4 +24,4 @@ export function FixtureShell() {
   </div>
 }
 
-createRoot(document.getElementById('root')!).render(<WindowManagerProvider><FixtureShell /></WindowManagerProvider>)
+createRoot(document.getElementById('root')!).render(<WindowManagerProvider projectEntries={projectFixtures}><FixtureShell /></WindowManagerProvider>)

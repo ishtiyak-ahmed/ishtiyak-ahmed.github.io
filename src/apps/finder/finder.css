@@ -54,3 +54,6 @@
   .finder-items--grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
   .finder-item__open { min-width: 44px; }
 }
+
+.finder-status a { color: var(--color-finder); flex-shrink: 0; }
+.finder-status span[title] { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,3 +1,4 @@
+import { useWindowManager } from '../hooks/useWindowManager'
 import { FinderApp } from './finder/FinderApp'
 import { ExperienceApp } from './experience/ExperienceApp'
 import type { ResourceRequest } from '../app/windowState'
@@ -8,7 +9,8 @@ import { SkillsApp } from './skills/SkillsApp'
 import { CoffeeApp } from './coffee/CoffeeApp'
 
 export function ApplicationContent({ appId, resourceRequest }: { appId: WindowApplicationId; resourceRequest?: ResourceRequest }) {
-  if (appId === 'projects') return <FinderApp selectionRequest={resourceRequest} />
+  const { navigateProject } = useWindowManager()
+  if (appId === 'projects') return <FinderApp selectionRequest={resourceRequest} onNavigate={navigateProject} />
   if (appId === 'experience') return <ExperienceApp selectionRequest={resourceRequest} />
   if (appId === 'skills') return <SkillsApp />
   if (appId === 'education') return <EducationApp />

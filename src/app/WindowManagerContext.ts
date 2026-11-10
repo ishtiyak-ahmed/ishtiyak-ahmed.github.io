@@ -6,6 +6,7 @@ export interface WindowManagerApi {
   state: WindowState
   activeAppId: ApplicationId
   openApp: (id: ApplicationId, resourceId?: string) => void
+  navigateProject?: (location: string | null) => void
   closeApp: (id: WindowApplicationId) => void
   minimizeApp: (id: WindowApplicationId) => void
   restoreApp: (id: WindowApplicationId) => void

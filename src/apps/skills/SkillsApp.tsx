@@ -97,7 +97,7 @@ export function SkillsApp({ resources = [], onSelectResource }: SkillsAppProps) 
                   {selected && <div className="skill-popover" role="region" aria-label={`${skill.name} details`} id={`skill-details-${skill.id}`}
                     data-above={preview.above} style={{ '--popover-left': `${preview.left}px`, '--popover-width': `${preview.width}px` } as CSSProperties}>
                     <strong>{skill.name}</strong><p id={`skill-description-${skill.id}`}>{skill.description}</p>
-                    {related.map((destination) => <button type="button" key={`${destination.applicationId}-${destination.resourceId}`} onClick={() => { openApp(destination.applicationId); onSelectResource?.(destination) }}>{destination.label}</button>)}
+                    {related.map((destination) => <button type="button" key={`${destination.applicationId}-${destination.resourceId}`} onClick={() => { openApp(destination.applicationId, destination.resourceId); onSelectResource?.(destination) }}>{destination.label}</button>)}
                   </div>}
                 </li>
               )
