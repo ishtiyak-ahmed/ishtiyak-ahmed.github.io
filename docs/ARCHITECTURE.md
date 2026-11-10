@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Phase 9 (deployment blocked)
+## Implemented through Phase 9 (publicly deployed)
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain typed configuration; Phase 7 positions Currently at upper-right and leaves the photo/Quick Links upper-left in `data/desktop.ts`. No full-page navigation occurs.
 
@@ -124,4 +124,4 @@ Supported commands and aliases are documented in README and the generated help o
 
 The first-release workflow verifies both the development branch and main/PR changes. Node 24 installs the locked dependencies; typecheck, lint, tests, production build, and asset/fixture verification precede artifact upload. Only main deploys through configure-pages/upload-pages-artifact/deploy-pages into github-pages, with contents read, narrowly scoped Pages/OIDC permissions, and concurrency serialization. The deployment artifact contains only dist; no generated bundle is committed.
 
-Pages creation is currently blocked by the account plan for this private repository (HTTP 422 from GitHub). No public-site success is claimed, and visibility has not changed. Once eligibility is resolved, enable workflow-based Pages, integrate the reviewed release into main preserving history, wait for the deployment job, then verify the actual public URL and static assets. Subsequent phases use branches → checks/review → main → Actions → live verification.
+The private-repository Pages plan restriction was resolved with the owner's explicit authorization to make the existing repository public. Main fast-forwarded to verified release af90a9d, preserving all history, and the Actions artifact deployment succeeded. Pages is configured with build_type workflow and HTTPS. The actual public URL, https://ishtiyak-ahmed.github.io, was verified with applications, routes/history, assets, and the unchanged résumé. Subsequent phases use branches → checks/review → main → Actions → live verification.

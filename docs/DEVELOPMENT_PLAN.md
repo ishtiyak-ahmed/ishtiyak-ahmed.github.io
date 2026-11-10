@@ -19,9 +19,9 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 
 Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both depend on the window manager; the listed order keeps application patterns consistent. Project reports and JARVIS follow the project data so they reuse a single source of truth.
 
-Phase 9 explicitly authorizes the first public GitHub Pages release. Preserve main history and review the verified build before integration. The repository currently has no Pages site configured and its private-repository plan blocks activation; source visibility requires explicit approval to change.
+Phase 9 explicitly authorizes the first public GitHub Pages release. Preserve main history and review the verified build before integration. The owner subsequently authorized public repository visibility; Pages is now configured for GitHub Actions and the functional V1 is live.
 
-Phases 0–9 functionality is implemented. Phase 8 was reviewed and checkpointed as `511e0c5` before Phase 9. Phase 9 local verification passes; public deployment is blocked by GitHub Pages plan eligibility. Phase 10 has not started.
+Phases 0–9 functionality is implemented. Phase 8 was reviewed and checkpointed as `511e0c5` before Phase 9. Phase 9 local and GitHub Actions verification pass; public deployment and live-site checks succeeded. Phase 10 has not started.
 
 ## Phase 3 verification
 
@@ -88,6 +88,6 @@ JARVIS implements the required portfolio commands, quoted parser/aliases and arg
 
 All 68 automated tests pass, preserving the previous 54. Strict TypeScript, ESLint, production build, asset/fixture checks, and diff checks pass. Browser checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640 in normal/expanded terminal sizes without workspace/dock overlap or horizontal overflow. Command output, app/project integration, completion/history, draft/lifecycle, clear/reset, reader scroll preservation, real résumé rendering, GitHub profile and TTC external opening, and Finder refresh/history/report availability are verified locally.
 
-The release pipeline is .github/workflows/pages.yml. Future changes use branches, checks, review, ordinary integration into main, Actions deployment, and actual public-site verification. Pages creation returned HTTP 422: the current plan does not support Pages for this private repository. Publication and live checks remain incomplete until eligibility is resolved; the repository has not been made public. Do not report a green local/CI build as public deployment.
+The release pipeline is .github/workflows/pages.yml. Future changes use branches, checks, review, ordinary integration into main, Actions deployment, and actual public-site verification. Initial Pages creation returned HTTP 422 for the private repository. The owner explicitly authorized public visibility, resolving eligibility. Release af90a9d was fast-forwarded into main without rewriting history. Production workflow 42735245365 succeeded, and https://ishtiyak-ahmed.github.io was checked directly: all dock applications, JARVIS/Finder integration, resources, static assets, résumé bytes, direct project links, refresh, and browser history. The obsolete legacy Pages run was canceled and publishing now uses the Actions artifact workflow.
 
 Pending: approved project/experience details and verified relationships, personal photograph, official institutional logo; Phase 10 comprehensive visual redesign/motion and Phase 11 final content/accessibility/QA/release refinement remain separate.

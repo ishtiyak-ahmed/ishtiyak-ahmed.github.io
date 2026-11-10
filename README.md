@@ -77,7 +77,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–8 are checkpointed locally (Phase 8: `511e0c5`). Phase 9 prepares the first public release; its deployment status is recorded below.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–8 are checkpointed locally (Phase 8: `511e0c5`). Phase 9 is publicly deployed; its deployment status is recorded below.
 
 Hash routing supports shareable Finder folders and report addresses without GitHub Pages rewrites, a server, or a routing dependency.
 
@@ -181,7 +181,7 @@ Enter submits; Up/Down browse session history and recover a draft. Tab completes
 
 ## First release and future deployment
 
-Required public URL: **https://ishtiyak-ahmed.github.io**. Deployment is currently **blocked**, not published: GitHub's Pages API returned HTTP 422, “Your current plan does not support GitHub Pages for this repository.” The existing repository is private and had no Pages site configured. Keep source visibility unchanged unless explicitly approved. Enable a plan supporting private-repository Pages, or explicitly authorize making this repository and its history public, then enable Pages with GitHub Actions.
+Public website: **https://ishtiyak-ahmed.github.io**. The existing repository is public and Pages uses GitHub Actions. Release `af90a9d` was integrated into main by a history-preserving fast-forward and [production deployment succeeded](https://github.com/ishtiyak-ahmed/ishtiyak-ahmed.github.io/actions/runs/42735245365). The live desktop, applications, JARVIS/Finder integration, project routes/refresh/history, static assets, and unchanged résumé were verified. Initial private-repository plan restrictions were resolved by the owner's explicit authorization to make this repository and its history public.
 
 `.github/workflows/pages.yml` checks pushes to main/rebuild and pull requests into main using Node 24, npm ci, strict TypeScript, ESLint, all tests, build, and `npm run verify:build`. Only main can upload/deploy the production dist artifact. Official GitHub Actions handle Pages configuration, upload, and deployment, with scoped permissions, a github-pages environment, and serialized deployments. Generated dist files stay ignored. The build verifier checks asset paths, unchanged résumé bytes, and exclusion of test fixtures/development placeholders. Vite base remains `/`; hash routes require no server fallback.
 
