@@ -32,7 +32,7 @@ export const applications = {
     icon: { kind: 'glyph', glyph: 'house', tone: 'silver' },
   },
   jarvis: {
-    window: { normal: { width: 760, height: 500 }, expanded: { width: 1000, height: 700 }, placeholder: { message: 'Terminal implementation scheduled for Phase 9.' } },
+    window: { normal: { width: 760, height: 500 }, expanded: { width: 1000, height: 700 } },
     id: 'jarvis', name: 'Beyond the Data', launch: 'window', singleInstance: true,
     icon: { kind: 'glyph', glyph: 'terminal', tone: 'terminal' },
   },

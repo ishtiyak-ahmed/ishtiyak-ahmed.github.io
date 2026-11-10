@@ -1,6 +1,6 @@
 # Architecture
 
-## Implemented through Phase 8
+## Implemented through Phase 9 (deployment blocked)
 
 `src/main.tsx` mounts React in Strict Mode. `app/App.tsx` composes the persistent desktop, fixed MenuBar and Dock, and WindowManager under WindowManagerProvider. DesktopHero, PhotoWidget, CurrentlyWidget, and QuickLinksWidget retain typed configuration; Phase 7 positions Currently at upper-right and leaves the photo/Quick Links upper-left in `data/desktop.ts`. No full-page navigation occurs.
 
@@ -38,7 +38,7 @@ DockIcon still supports Lucide glyph compositions or a replaceable custom asset.
 
 ## Application content and shared data
 
-`apps/ApplicationContent.tsx` resolves Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects to their real application components; Beyond the Data still uses ApplicationPlaceholder with registry-driven name, icon, and message. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. The registry's placeholder field is now optional for implemented applications.
+`apps/ApplicationContent.tsx` resolves all six window applications to their real components, including Beyond the Data to JarvisApp. The obsolete ApplicationPlaceholder is removed. WindowManager renders the resolver inside the existing AppWindow/lifetime key. Shared window sizing, focus, controls, and reducer behavior are unchanged. No application is registered with a development placeholder.
 
 `data/education.ts` centralizes institution, campus, major, minors, expected graduation, and official-logo reference. Education uses a centered identity and semantic definition-list rows. Graduation is confirmed as May 2029; the logo is a generic academic placeholder until a verified official institutional mark is supplied. The unknown-date fallback remains, but no historical alternative date overrides the confirmed value.
 
@@ -113,3 +113,15 @@ WindowManagerProvider applies initial and browser-origin folder routes via the e
 RoutedPortfolio leaves DesktopShell mounted and hides it while showing report/error content. Report route headings receive focus, and report section buttons scroll/focus without altering the route hash. Resource anchors open separate tabs with safe rel values; internal report destinations derive from the registry's slug. Shareable project links and future JARVIS commands reuse the same helpers. Skills now passes the verified stable resource ID to openApp; no production relationships are invented.
 
 To add a reviewed report, populate the existing project's report field and allowlist real media; do not create a second project catalog. Fixtures, fake claims, and placeholder destinations stay under tests. Production checks scan generated HTML/JS and verify test pages/assets are excluded. No new dependencies, backend, deployment, or global redesign are introduced.
+
+## JARVIS and release pipeline
+
+`apps/jarvis/parser.ts` parses tokens and quoted arguments without execution. `commands.ts` exposes a typed command registry and pure executeCommand result (`lines`, optional app/link effect, optional clear). It imports existing desktop, education, experience, skill, contact, application, and project data; no independent portfolio catalog exists. Application aliases resolve stable IDs/display names. Project launches use shared openApp requests and Finder hash coordination. Only configured safe external resources and the canonical local résumé are launchable. No shell/eval/remote-code path exists.
+
+`terminalState.ts` owns a pure reducer for boot progress, bounded transcript/history, input, history cursor, saved draft, and unique entry IDs. Boot output is created once per lifetime by the reducer initializer; a cleanup-safe timer only reveals lines, and skip/reduced-motion completes it. Clear removes transcript entries without resetting boot/history. AppWindow's existing mount policy preserves state through minimize/restore, focus, and expansion; close resets it. JarvisApp renders a scrollable polite log, labelled input, visible focus, command tones, and fallback resource anchors. It follows new output only near the bottom, preserving manual reading position.
+
+Supported commands and aliases are documented in README and the generated help output. Tab completion uses registry-backed candidates, resolves unique matches, and prints ambiguous matches; it does not consume Ctrl/Meta/Alt shortcuts or Shift+Tab. Runtime OS version is centralized in data/system.ts. Public beta wording removes obsolete phase labels without rewriting approved portfolio content.
+
+The first-release workflow verifies both the development branch and main/PR changes. Node 24 installs the locked dependencies; typecheck, lint, tests, production build, and asset/fixture verification precede artifact upload. Only main deploys through configure-pages/upload-pages-artifact/deploy-pages into github-pages, with contents read, narrowly scoped Pages/OIDC permissions, and concurrency serialization. The deployment artifact contains only dist; no generated bundle is committed.
+
+Pages creation is currently blocked by the account plan for this private repository (HTTP 422 from GitHub). No public-site success is claimed, and visibility has not changed. Once eligibility is resolved, enable workflow-based Pages, integrate the reviewed release into main preserving history, wait for the deployment job, then verify the actual public URL and static assets. Subsequent phases use branches → checks/review → main → Actions → live verification.

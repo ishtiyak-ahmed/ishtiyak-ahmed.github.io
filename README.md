@@ -1,6 +1,6 @@
 # Ishtiyak OS
 
-A macOS-inspired personal portfolio built incrementally. Phase 8 adds structured report infrastructure, publication-aware resources, and shareable project navigation. Experience shows one confirmed role; detailed project and experience wording remains pending review.
+A macOS-inspired personal portfolio built incrementally. Phase 9 adds JARVIS, a deterministic portfolio terminal, and the first-release GitHub Actions pipeline. Experience shows one confirmed role; detailed project and experience wording remains pending review.
 
 ## Stack
 
@@ -39,7 +39,7 @@ src/
     ui/                  Small local brand icon SVGs
   apps/
     finder/              Project explorer, navigation reducer, list/grid views
-    jarvis/              Future deterministic portfolio terminal
+    jarvis/              Deterministic portfolio command interpreter
     education/           Education information panel
     experience/          Split-view work history and local selection
     skills/              Categorized toolkit and accessible skill descriptions
@@ -67,9 +67,9 @@ Unused reserved directories contain only `.gitkeep`; they have no implementation
 6. Experience Application
 7. Projects Finder
 8. Project Reports
-9. JARVIS
-10. Visual Redesign & Motion Polish
-11. Final Content, QA & Deployment
+9. JARVIS + First Public Deployment
+10. Comprehensive Visual Redesign & Motion Polish
+11. Final Content, Accessibility, QA & Release Refinement
 
 See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance checks](docs/DEVELOPMENT_PLAN.md).
 
@@ -77,7 +77,7 @@ See [architecture](docs/ARCHITECTURE.md) and [phase dependencies and acceptance 
 
 Target: https://ishtiyak-ahmed.github.io (repository: `ishtiyak-ahmed/ishtiyak-ahmed.github.io`). Vite uses `base: '/'` because this is a user site at the domain root, not a repository subpath. The production artifact is `dist/`.
 
-The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–7 are checkpointed locally (Phase 7: `41a28f8`). Phase 8 remains uncommitted for review. Publishing belongs to Phase 11.
+The local `rebuild/ishtiyak-os` branch starts from the existing `main` history. Old static files are replaced only in this working tree; the original versions remain in Git history. Phase 0 performs no push, merge, Pages workflow changes, or deployment. The published site remains unchanged. Phases 0–8 are checkpointed locally (Phase 8: `511e0c5`). Phase 9 prepares the first public release; its deployment status is recorded below.
 
 Hash routing supports shareable Finder folders and report addresses without GitHub Pages rewrites, a server, or a routing dependency.
 
@@ -111,9 +111,9 @@ The React reducer/context lives in `src/app/`, with `useWindowManager` exposing 
 
 Red closes and resets content on the next launch. Yellow hides the window without unmounting its content. Green toggles predefined normal/expanded sizes for Projects, Beyond the Data, Technical Skills, and Experience; it is disabled for Education and Let's Grab a Coffee. Expanded state survives minimizing and Home. Windows are centered within the usable area between the menu bar and dock, constrained to the viewport, and scroll internally as needed. There is no dragging, manual resizing, browser fullscreen, or focus trap.
 
-Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects render real content through `apps/ApplicationContent.tsx`. Beyond the Data retains a neutral development placeholder. Session/window state resets on page reload.
+Education, Let's Grab a Coffee, Technical Skills, Experience, and Projects render real content through `apps/ApplicationContent.tsx`. Beyond the Data renders JARVIS. Every dock application now has functional content. Session/window state resets on page reload.
 
-`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 54 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
+`npm test` uses Node's built-in test runner and TypeScript stripping (no new dependency) to verify 68 lifecycle, selection, configuration, shared-data, asset, and clipboard scenarios. Browser checks covered all five requested sizes, expansion and compact controls, foreground/background interactions, keyboard focus, Home, running indicators, and preserved/reset scroll state on a deliberately short screen.
 
 ## Education and Coffee configuration
 
@@ -141,7 +141,7 @@ Future related navigation can call `openApp('experience', roleId)`. The optional
 
 Fictional fixtures live exclusively under `tests/`. With Vite running, `/tests/browser/experience.html` exercises multiple roles; `?empty=1` checks empty data, and `?many=1` checks independent history scrolling. These test-only pages and data are not imported into the production entry or included in `dist/`. They are never shown in the live portfolio.
 
-Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 8 is ready for review; nothing is pushed or deployed.
+Outstanding assets/content: approved experience summary/accomplishments, official university logo, personal photograph, final skill descriptions, and verified skill-to-project/experience mappings. Run `npm run dev` for local review. Phase 9 implementation is verified; see the deployment status below.
 
 ## Projects Finder
 
@@ -170,3 +170,21 @@ Shared helpers in `data/projects.ts` include `projectHash`, `shareableProjectUrl
 To publish an approved internal report later: add its reviewed content to the owning Project's `report` field with `published-internal`, give sections stable unique IDs, add actual public media to `projectAssetPaths`, and run data/rendering/production checks. A valid report resource and hash destination are then derived automatically. For an external report, set `published-external` with the verified destination instead. Keep unfinished work `unavailable`. The test-only `/tests/browser/reports.html` validates the template using fictional fixtures and a local diagram; production excludes both.
 
 Outstanding: approved JavaFX/Tree report content, introductions, engineering details, outcomes, screenshots/diagrams, and independently verified repository/demo resources. TTC's full report is not duplicated. Final writing remains a separate review; Phase 9 has not started, and visual redesign remains Phase 10.
+
+## JARVIS (Phase 9)
+
+Beyond the Data (`jarvis`) hosts **Just Another Resume Verification & Info System**. `apps/jarvis/parser.ts` tokenizes whitespace and matching quotes; `commands.ts` owns typed command definitions, validation, registry-backed output, and declarative launch effects. JarvisApp alone performs those effects through shared `openApp` or safe new-tab navigation. Input is never evaluated as JavaScript or shell code. Runtime OS version comes from `data/system.ts`.
+
+Commands: `help`, `status`, `whoami`, `about`, `ls`, `ls projects`, `ls experience`, `ls skills`, `open -a <ID-or-quoted-name>`, `open project <ID-or-slug>`, `open resume`, `open github`, `open linkedin`, `contact`, `cat resume`, `interests`, and `clear`. Aliases: `?` for help and `cls` for clear. Unknown commands, malformed quotes, unsupported options, and missing resources produce useful errors. Unconfigured interests are reported as unavailable. No portfolio claims are generated.
+
+Enter submits; Up/Down browse session history and recover a draft. Tab completes supported commands, quoted application names, and project IDs, or lists ambiguous candidates; Shift+Tab leaves the field. Initialization is about one second, skippable, and immediate with reduced motion. Its messages correspond to local configuration reads. History is capped at 100 commands, transcript at 120 entries, and input at 2,000 characters. Output wraps; automatic scrolling follows only when the reader is already near the bottom. Minimize, expansion, and covering windows preserve state. Closing remounts a fresh session; clear retains history without rebooting.
+
+## First release and future deployment
+
+Required public URL: **https://ishtiyak-ahmed.github.io**. Deployment is currently **blocked**, not published: GitHub's Pages API returned HTTP 422, “Your current plan does not support GitHub Pages for this repository.” The existing repository is private and had no Pages site configured. Keep source visibility unchanged unless explicitly approved. Enable a plan supporting private-repository Pages, or explicitly authorize making this repository and its history public, then enable Pages with GitHub Actions.
+
+`.github/workflows/pages.yml` checks pushes to main/rebuild and pull requests into main using Node 24, npm ci, strict TypeScript, ESLint, all tests, build, and `npm run verify:build`. Only main can upload/deploy the production dist artifact. Official GitHub Actions handle Pages configuration, upload, and deployment, with scoped permissions, a github-pages environment, and serialized deployments. Generated dist files stay ignored. The build verifier checks asset paths, unchanged résumé bytes, and exclusion of test fixtures/development placeholders. Vite base remains `/`; hash routes require no server fallback.
+
+Future Phase 10/11 releases: develop in a branch, run all checks, review the UI/functionality, integrate the approved branch into main through an ordinary merge/fast-forward or PR, let Actions deploy, and verify the actual public URL (apps, résumé, resources, hash refresh/history, assets, and console). Do not manually copy files into the old site. See [GitHub's custom Pages workflow guidance](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+Known limits: command history is session-only; Tab completion is intentionally simple; popups may require the provided fallback link. No AI, backend, arbitrary commands, or new dependencies are introduced. Personal photograph, official university artwork, approved project reports and role details, and verified related-work mappings remain pending. Phase 10 owns comprehensive visual/motion redesign; Phase 11 owns final content, accessibility, QA, and release refinement.

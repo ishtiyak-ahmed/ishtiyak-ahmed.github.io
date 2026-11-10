@@ -13,15 +13,15 @@ Complete one phase per request. Run `npm run typecheck`, `npm run lint`, and `np
 | 6 — Experience Application | Mail-inspired position list and selected-role detail split view | 5; verified work-history content | Multiple roles, selected role details, keyboard navigation, window lifecycle; no invented employers or accomplishments |
 | 7 — Projects Finder | Data-driven project explorer | 3, 5; verified project records | Project selection, navigation, empty states; add verified skill-to-project references only when supported |
 | 8 — Project Reports | Shareable reports and hash-route integration | 7 | Direct hash URL, reload, back/forward, unknown slugs, persistent desktop |
-| 9 — JARVIS | Deterministic portfolio command interpreter | 6–8 and shared portfolio data | Valid/invalid commands, history, accessible output, shared launching including Experience; no AI |
-| 10 — Visual Redesign & Motion Polish | Comprehensive visual identity and motion refinement | 1–9 | Responsive visual review, keyboard/reduced motion, consistent surfaces and artwork |
-| 11 — Final Content, QA & Deployment | Approved content, regression QA, Pages publishing | 1–10 | Performance, production preview, root assets/direct routes, then separately authorized deployment |
+| 9 — JARVIS + First Public Deployment | Deterministic terminal and verified GitHub Pages release | 6–8 and shared portfolio data | Valid/invalid commands, history, accessible output, shared launching including Experience; no AI |
+| 10 — Comprehensive Visual Redesign & Motion Polish | Comprehensive visual identity and motion refinement | 1–9 | Responsive visual review, keyboard/reduced motion, consistent surfaces and artwork |
+| 11 — Final Content, Accessibility, QA & Release Refinement | Approved content, accessibility, regression QA, release refinement | 1–10 | Performance, production preview, root assets/direct routes, then separately authorized deployment |
 
 Do not introduce UI for later phases during earlier ones. Stages 4 and 5 both depend on the window manager; the listed order keeps application patterns consistent. Project reports and JARVIS follow the project data so they reuse a single source of truth.
 
-The original published site remains live throughout the rebuild. Review branch changes before the later merge/deployment decision. Add GitHub Pages automation only in Phase 11; do not copy old deployment behavior into the rebuild.
+Phase 9 explicitly authorizes the first public GitHub Pages release. Preserve main history and review the verified build before integration. The repository currently has no Pages site configured and its private-repository plan blocks activation; source visibility requires explicit approval to change.
 
-Phases 0–8 are implemented. Phases 0–7 have local checkpoint commits; Phase 7 was reviewed and checkpointed as `41a28f8` before Phase 8. Phase 8 remains uncommitted for review; Phase 9 has not started.
+Phases 0–9 functionality is implemented. Phase 8 was reviewed and checkpointed as `511e0c5` before Phase 9. Phase 9 local verification passes; public deployment is blocked by GitHub Pages plan eligibility. Phase 10 has not started.
 
 ## Phase 3 verification
 
@@ -81,3 +81,13 @@ Supported routes are desktop `/#/`, Finder root `/#/projects`, known folder `/#/
 Acceptance covers strict TypeScript, ESLint, 54 automated tests (all original 43 preserved), and production build. New tests cover publication/data filtering, missing media/optional sections, URL helpers, route validation, single-instance synchronization, history writes, and source exclusion of fixtures. Browser verification checks actual internal report rendering/new-tab opening using an isolated fixture, real external TTC loading, direct links/refresh, Back/Forward, invalid recovery, cross-app requests, lifecycle, existing apps, and responsive Finder/report bounds at 1920×1080, 1440×900, 1280×800, 390×844, and 320×640.
 
 Before publication: obtain approved report prose and media for JavaFX/Tree, verified source/demo/documentation destinations, and confirmed skill/experience relationships. Add approved content to each existing project's report field; register real public media paths and rerun rendering/build checks. Unfinished reports remain unavailable. Final writing is separately reviewed; visual redesign remains Phase 10, final QA/deployment Phase 11. No Phase 8 commit, push, deployment, or Phase 9 work is authorized here.
+
+## Phase 9 verification and first-release status
+
+JARVIS implements the required portfolio commands, quoted parser/aliases and argument errors, actual shared app/project launches, safe resource opening/fallback links, startup/skip/reduced-motion, draft-preserving history, simple completion, bounded transcript, scroll preservation, and shared window lifecycle. All seven dock actions now have functional content. No backend, AI, shell execution, fabricated claims, or visual redesign is added.
+
+All 68 automated tests pass, preserving the previous 54. Strict TypeScript, ESLint, production build, asset/fixture checks, and diff checks pass. Browser checks cover 1920×1080, 1440×900, 1280×800, 390×844, and 320×640 in normal/expanded terminal sizes without workspace/dock overlap or horizontal overflow. Command output, app/project integration, completion/history, draft/lifecycle, clear/reset, reader scroll preservation, real résumé rendering, GitHub profile and TTC external opening, and Finder refresh/history/report availability are verified locally.
+
+The release pipeline is .github/workflows/pages.yml. Future changes use branches, checks, review, ordinary integration into main, Actions deployment, and actual public-site verification. Pages creation returned HTTP 422: the current plan does not support Pages for this private repository. Publication and live checks remain incomplete until eligibility is resolved; the repository has not been made public. Do not report a green local/CI build as public deployment.
+
+Pending: approved project/experience details and verified relationships, personal photograph, official institutional logo; Phase 10 comprehensive visual redesign/motion and Phase 11 final content/accessibility/QA/release refinement remain separate.

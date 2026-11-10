@@ -78,7 +78,7 @@ export function FinderApp({ entries = projects, selectionRequest, onNavigate }: 
           <section className="finder-content" ref={content} aria-labelledby="finder-content-heading" tabIndex={0}>
             <header className="finder-content__header">
               <h2 id="finder-content-heading" ref={heading} tabIndex={-1}>{searching ? 'Search results' : project?.title ?? 'Projects'}</h2>
-              {searching ? <p>Searching all projects · {items.length} {items.length === 1 ? 'result' : 'results'}</p> : project && <p>{project.shortDescription ?? 'Project details will be added during the content-review phase.'}</p>}
+              {searching ? <p>Searching all projects · {items.length} {items.length === 1 ? 'result' : 'results'}</p> : project && <p>{project.shortDescription ?? 'Project overview is not available yet.'}</p>}
               {!searching && project && !isReportPublished(project) && <p>Project report not yet published.</p>}
             </header>
             {!!items.length && <ul className={`finder-items finder-items--${state.view}`} aria-label={searching || !project ? 'Project folders' : 'Project resources'}>

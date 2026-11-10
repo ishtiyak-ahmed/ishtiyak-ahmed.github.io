@@ -3,7 +3,7 @@ import { FinderApp } from './finder/FinderApp'
 import { ExperienceApp } from './experience/ExperienceApp'
 import type { ResourceRequest } from '../app/windowState'
 import type { WindowApplicationId } from '../data/apps'
-import { ApplicationPlaceholder } from '../components/windows/ApplicationPlaceholder'
+import { JarvisApp } from './jarvis/JarvisApp'
 import { EducationApp } from './education/EducationApp'
 import { SkillsApp } from './skills/SkillsApp'
 import { CoffeeApp } from './coffee/CoffeeApp'
@@ -15,5 +15,5 @@ export function ApplicationContent({ appId, resourceRequest }: { appId: WindowAp
   if (appId === 'skills') return <SkillsApp />
   if (appId === 'education') return <EducationApp />
   if (appId === 'contact') return <CoffeeApp />
-  return <ApplicationPlaceholder appId={appId} />
+  return <JarvisApp />
 }
